@@ -1,0 +1,3353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Sahayak</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0369a1;
+            --primary-light: #7dd3fc;
+            --secondary: #10b981;
+            --secondary-dark: #047857;
+            --secondary-light: #6ee7b7;
+            --white: #ffffff;
+            --light-gray: #f8fafc;
+            --dark-gray: #334155;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --sidebar-width: 300px;
+            --header-height: 80px;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-secondary: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+            --gradient-dark: linear-gradient(135deg, #0c4a6e, #065f46);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 100%);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--gradient-dark);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0);
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+            padding: 2rem 1rem;
+        }
+
+        .sidebar.collapsed .logo h1,
+        .sidebar.collapsed .admin-details,
+        .sidebar.collapsed .nav-links span {
+            opacity: 0;
+            visibility: hidden;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            margin-right: 12px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .admin-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-right: 15px;
+            font-weight: 700;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .admin-details h3 {
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .admin-details p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-weight: 600;
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+            width: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links .badge {
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100vh;
+        }
+
+        .main-content.expanded {
+            margin-left: 80px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h2 {
+            color: var(--primary-dark);
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h2::before {
+            content: "";
+            display: block;
+            width: 6px;
+            height: 30px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .toggle-sidebar {
+            background: var(--gradient-secondary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .toggle-sidebar:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-actions button {
+            background: var(--gradient-secondary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .header-actions button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+        }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-right: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-1 .stat-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+        .stat-2 .stat-icon {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            color: white;
+        }
+        .stat-3 .stat-icon {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+        }
+        .stat-4 .stat-icon {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+        }
+
+        .stat-info h3 {
+            font-size: 2.2rem;
+            margin-bottom: 0.3rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .stat-info p {
+            color: var(--dark-gray);
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: var(--secondary);
+        }
+
+        .trend-down {
+            color: #ef4444;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-section:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-header h3 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-header h3::before {
+            content: "";
+            display: block;
+            width: 4px;
+            height: 20px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Enhanced Section Action Buttons */
+        .section-action-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .section-action-btn.view-all {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .section-action-btn.filter {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .section-action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section-action-btn.view-all:hover {
+            background: var(--gradient-secondary);
+        }
+
+        .section-action-btn.filter:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Tables */
+        .data-table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1.25rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table tr {
+            transition: all 0.2s ease;
+        }
+
+        .data-table tr:hover {
+            background-color: rgba(14, 165, 233, 0.03);
+            transform: scale(1.01);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #fef3c7, #f59e0b);
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: linear-gradient(135deg, #d1fae5, #10b981);
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background: linear-gradient(135deg, #fee2e2, #ef4444);
+            color: #991b1b; 
+        }
+
+        .status-active {
+            background: linear-gradient(135deg, #dbeafe, #3b82f6);
+            color: #1e40af;
+        }
+
+        .status-blocked {
+            background: linear-gradient(135deg, #f3f4f6, #6b7280);
+            color: #374151;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            box-shadow: var(--shadow);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .approve-btn {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            color: white;
+        }
+
+        .reject-btn {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            color: white;
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            color: white;
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 300px;
+            margin-top: 1.5rem;
+            position: relative;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .submit-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+        }
+
+        .tab {
+            padding: 1.25rem 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--dark-gray);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Search and Filter */
+        .search-filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            min-width: 150px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-xl);
+            animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-modal:hover {
+            background: #fee2e2;
+            color: #ef4444;
+            transform: rotate(90deg);
+        }
+
+        /* Notifications */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-2 {
+            margin-top: 2rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .main-content.expanded {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filter-bar {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                justify-content: center;
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .section-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-hands-helping"></i>
+            <h1>Sahayak Admin</h1>
+        </div>
+
+        <div class="admin-info">
+            <div class="admin-avatar">A</div>
+            <div class="admin-details">
+                <h3>Super Admin</h3>
+                <p>admin@sahayak.org</p>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li>
+                <a href="#" class="active" data-tab="dashboard"
+                    ><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a
+                >
+            </li>
+            <li>
+                <a href="#" data-tab="requests"
+                    ><i class="fas fa-hand-holding-usd"></i>
+                    <span>Manage Requests</span> <span class="badge">23</span></a
+                >
+            </li>
+            <li>
+                <a href="#" data-tab="users"
+                    ><i class="fas fa-users"></i> <span>User Management</span>
+                    <span class="badge">5</span></a
+                >
+            </li>
+            <li>
+                <a href="#" data-tab="ngos"
+                    ><i class="fas fa-hands-helping"></i> <span>NGO Management</span></a
+                >
+            </li>
+            <li>
+                <a href="#" data-tab="categories"
+                    ><i class="fas fa-tags"></i> <span>Categories</span></a
+                >
+            </li>
+            <li>
+                <a href="#" data-tab="analytics"
+                    ><i class="fas fa-chart-bar"></i> <span>Analytics</span></a
+                >
+            </li>
+            <li>
+                <a href="#" data-tab="content"
+                    ><i class="fas fa-edit"></i> <span>Content Management</span></a
+                >
+            </li>
+            <li>
+                <a href="#" data-tab="settings"
+                    ><i class="fas fa-cog"></i> <span>Settings</span></a
+                >
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2 id="page-title">
+                <i class="fas fa-tachometer-alt"></i>
+                Admin Dashboard
+            </h2>
+            <div class="header-actions">
+                <button class="toggle-sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search..." />
+                </div>
+                <button id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button id="exportBtn"><i class="fas fa-download"></i> Export</button>
+                <button id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card stat-1 pulse">
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>₹3.28Cr</h3>
+                        <p>Total Donations</p>
+                        <div class="trend-indicator trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>18.5% increase</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-2">
+                    <div class="stat-icon">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>187</h3>
+                        <p>Active Campaigns</p>
+                        <div class="trend-indicator trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>12 new today</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-3">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>12,845</h3>
+                        <p>Verified Users</p>
+                        <div class="trend-indicator trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>67 new today</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-4">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>42</h3>
+                        <p>Pending Approvals</p>
+                        <div class="trend-indicator trend-down">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>8 resolved</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>Recent Activity</h3>
+                    <div class="section-actions">
+                        <button class="section-action-btn view-all">
+                            <i class="fas fa-list"></i> View All
+                        </button>
+                        <button class="section-action-btn filter">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Activity Type</th>
+                                <th>User</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>15 Nov 2023, 14:30</td>
+                                <td>Campaign Created</td>
+                                <td>Rahul Sharma</td>
+                                <td>Medical emergency - Heart surgery</td>
+                                <td>
+                                    <span class="status status-pending">Pending Review</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>15 Nov 2023, 12:15</td>
+                                <td>Donation Received</td>
+                                <td>Priya Patel</td>
+                                <td>₹5,000 to Education Fund</td>
+                                <td><span class="status status-approved">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>15 Nov 2023, 10:45</td>
+                                <td>User Registration</td>
+                                <td>Amit Kumar</td>
+                                <td>Verified with Aadhaar</td>
+                                <td><span class="status status-approved">Verified</span></td>
+                            </tr>
+                            <tr>
+                                <td>14 Nov 2023, 18:20</td>
+                                <td>Campaign Completed</td>
+                                <td>Neha Singh</td>
+                                <td>Education fees fully funded</td>
+                                <td>
+                                    <span class="status status-approved">Successful</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>14 Nov 2023, 16:10</td>
+                                <td>NGO Approval</td>
+                                <td>HelpIndia Foundation</td>
+                                <td>Disaster relief organization</td>
+                                <td><span class="status status-approved">Approved</span></td>
+                            </tr>
+                            <tr>
+                                <td>14 Nov 2023, 14:45</td>
+                                <td>Large Donation</td>
+                                <td>Corporate Donor</td>
+                                <td>₹2,50,000 to Medical Fund</td>
+                                <td><span class="status status-approved">Processed</span></td>
+                            </tr>
+                            <tr>
+                                <td>13 Nov 2023, 11:30</td>
+                                <td>Campaign Update</td>
+                                <td>Rajesh Kumar</td>
+                                <td>Added medical reports for verification</td>
+                                <td>
+                                    <span class="status status-pending">Under Review</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pending Approvals -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>Pending Approvals</h3>
+                    <div class="section-actions">
+                        <button class="section-action-btn view-all">
+                            <i class="fas fa-list"></i> View All
+                        </button>
+                        <button class="section-action-btn view-all">
+                            <i class="fas fa-check-double"></i> Bulk Approve
+                        </button>
+                    </div>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Requester</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#SAH2023111501</td>
+                                <td>Emergency surgery for child</td>
+                                <td>Medical</td>
+                                <td>₹3,50,000</td>
+                                <td>Rajesh Kumar</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="approve-btn action-btn">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#SAH2023111502</td>
+                                <td>College fees for merit student</td>
+                                <td>Education</td>
+                                <td>₹1,20,000</td>
+                                <td>Priya Singh</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="approve-btn action-btn">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#SAH2023111503</td>
+                                <td>Flood relief in Assam</td>
+                                <td>Disaster</td>
+                                <td>₹5,00,000</td>
+                                <td>Assam Relief NGO</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="approve-btn action-btn">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#SAH2023111401</td>
+                                <td>Cancer treatment for elderly</td>
+                                <td>Medical</td>
+                                <td>₹4,20,000</td>
+                                <td>Sunita Devi</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="approve-btn action-btn">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#SAH2023111402</td>
+                                <td>School supplies for village children</td>
+                                <td>Education</td>
+                                <td>₹75,000</td>
+                                <td>Village Education Trust</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="approve-btn action-btn">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Requests Tab -->
+        <div id="requests" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>All Funding Requests</h3>
+                    <div class="section-actions">
+                        <button class="section-action-btn view-all">
+                            <i class="fas fa-plus"></i> Create Request
+                        </button>
+                        <button class="section-action-btn filter">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <input
+                            type="text"
+                            placeholder="Search requests by title, requester, or ID..."
+                        />
+                    </div>
+                    <select class="filter-select">
+                        <option>All Categories</option>
+                        <option>Medical</option>
+                        <option>Education</option>
+                        <option>Disaster Relief</option>
+                        <option>Livelihood</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Pending</option>
+                        <option>Approved</option>
+                        <option>Rejected</option>
+                        <option>Completed</option>
+                    </select>
+                    <button class="section-action-btn view-all">Apply Filters</button>
+                </div>
+
+                <div class="tabs-container">
+                    <div class="tabs-header">
+                        <div class="tab active" data-request-tab="all">All Requests</div>
+                        <div class="tab" data-request-tab="pending">Pending</div>
+                        <div class="tab" data-request-tab="approved">Approved</div>
+                        <div class="tab" data-request-tab="rejected">Rejected</div>
+                        <div class="tab" data-request-tab="completed">Completed</div>
+                    </div>
+
+                    <div class="tab-content active" id="all-requests">
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Request ID</th>
+                                        <th>Title</th>
+                                        <th>Requester</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
+                                        <th>Raised</th>
+                                        <th>Progress</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#SAH2023111501</td>
+                                        <td>Emergency surgery for child</td>
+                                        <td>Rajesh Kumar</td>
+                                        <td>Medical</td>
+                                        <td>₹3,50,000</td>
+                                        <td>₹1,20,500</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 34%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>34%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-pending">Pending</span>
+                                        </td>
+                                        <td>15 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="approve-btn action-btn">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button class="reject-btn action-btn">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023111401</td>
+                                        <td>College fees for merit student</td>
+                                        <td>Priya Singh</td>
+                                        <td>Education</td>
+                                        <td>₹1,20,000</td>
+                                        <td>₹85,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 71%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>71%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>14 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023111301</td>
+                                        <td>Flood relief in Assam</td>
+                                        <td>HelpIndia NGO</td>
+                                        <td>Disaster</td>
+                                        <td>₹5,00,000</td>
+                                        <td>₹3,45,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 69%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>69%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>13 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023111201</td>
+                                        <td>Business loan for woman entrepreneur</td>
+                                        <td>Sunita Devi</td>
+                                        <td>Livelihood</td>
+                                        <td>₹2,00,000</td>
+                                        <td>₹0</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 0%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>0%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-rejected">Rejected</span>
+                                        </td>
+                                        <td>12 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="approve-btn action-btn">
+                                                    <i class="fas fa-redo"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023111101</td>
+                                        <td>Medical treatment for accident victim</td>
+                                        <td>Vikram Singh</td>
+                                        <td>Medical</td>
+                                        <td>₹1,80,000</td>
+                                        <td>₹1,80,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 100%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>100%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Completed</span>
+                                        </td>
+                                        <td>11 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Additional sample data -->
+                                    <tr>
+                                        <td>#SAH2023111001</td>
+                                        <td>Orphanage renovation project</td>
+                                        <td>Children Hope NGO</td>
+                                        <td>Child Welfare</td>
+                                        <td>₹8,00,000</td>
+                                        <td>₹5,60,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 70%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>70%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>10 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023110901</td>
+                                        <td>Cancer treatment for single mother</td>
+                                        <td>Anita Sharma</td>
+                                        <td>Medical</td>
+                                        <td>₹6,50,000</td>
+                                        <td>₹4,20,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 65%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>65%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>09 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023110801</td>
+                                        <td>Clean water project for village</td>
+                                        <td>Water for All NGO</td>
+                                        <td>Environment</td>
+                                        <td>₹12,00,000</td>
+                                        <td>₹8,40,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 70%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>70%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>08 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023110701</td>
+                                        <td>Animal shelter construction</td>
+                                        <td>Paws & Claws NGO</td>
+                                        <td>Animal Welfare</td>
+                                        <td>₹15,00,000</td>
+                                        <td>₹9,00,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 60%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>60%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>07 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023110601</td>
+                                        <td>Women's vocational training center</td>
+                                        <td>Women Empowerment NGO</td>
+                                        <td>Women Welfare</td>
+                                        <td>₹10,00,000</td>
+                                        <td>₹7,50,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 75%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>75%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>06 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023110501</td>
+                                        <td>Disaster relief for cyclone victims</td>
+                                        <td>Disaster Response NGO</td>
+                                        <td>Disaster Relief</td>
+                                        <td>₹25,00,000</td>
+                                        <td>₹18,75,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 75%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>75%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>05 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023110401</td>
+                                        <td>School bus for rural children</td>
+                                        <td>Rural Education Trust</td>
+                                        <td>Education</td>
+                                        <td>₹18,00,000</td>
+                                        <td>₹12,60,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 70%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>70%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>04 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023110301</td>
+                                        <td>Medical equipment for clinic</td>
+                                        <td>Health First NGO</td>
+                                        <td>Medical</td>
+                                        <td>₹22,00,000</td>
+                                        <td>₹15,40,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 70%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>70%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>03 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023110201</td>
+                                        <td>Library setup for community</td>
+                                        <td>Knowledge Foundation</td>
+                                        <td>Education</td>
+                                        <td>₹7,00,000</td>
+                                        <td>₹4,90,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 70%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>70%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>02 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SAH2023110101</td>
+                                        <td>Organic farming initiative</td>
+                                        <td>Green Earth NGO</td>
+                                        <td>Environment</td>
+                                        <td>₹9,00,000</td>
+                                        <td>₹6,30,000</td>
+                                        <td>
+                                            <div
+                                                style="
+                                                    background: #e5e7eb;
+                                                    height: 6px;
+                                                    border-radius: 3px;
+                                                    overflow: hidden;
+                                                "
+                                            >
+                                                <div
+                                                    style="
+                                                        background: var(--gradient-primary);
+                                                        height: 100%;
+                                                        width: 70%;
+                                                    "
+                                                ></div>
+                                            </div>
+                                            <small>70%</small>
+                                        </td>
+                                        <td>
+                                            <span class="status status-approved">Approved</span>
+                                        </td>
+                                        <td>01 Nov 2023</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="view-btn action-btn">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="edit-btn action-btn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Tab -->
+        <div id="users" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>User Management</h3>
+                    <div class="section-actions">
+                        <button class="section-action-btn view-all">
+                            <i class="fas fa-plus"></i> Add New User
+                        </button>
+                        <button class="section-action-btn filter">
+                            <i class="fas fa-download"></i> Export Users
+                        </button>
+                    </div>
+                </div>
+
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <input
+                            type="text"
+                            placeholder="Search users by name, email, or ID..."
+                        />
+                    </div>
+                    <select class="filter-select">
+                        <option>All Roles</option>
+                        <option>Requester</option>
+                        <option>Contributor</option>
+                        <option>NGO Admin</option>
+                        <option>Super Admin</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Active</option>
+                        <option>Pending</option>
+                        <option>Blocked</option>
+                    </select>
+                    <button class="section-action-btn view-all">Apply Filters</button>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Join Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#USER1001</td>
+                                <td>Rahul Sharma</td>
+                                <td>rahul@example.com</td>
+                                <td>+91 98765 43210</td>
+                                <td>Requester</td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>15 Oct 2023</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="edit-btn action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USER1002</td>
+                                <td>Priya Patel</td>
+                                <td>priya@example.com</td>
+                                <td>+91 98765 43211</td>
+                                <td>Contributor</td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>12 Oct 2023</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="edit-btn action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USER1003</td>
+                                <td>Amit Kumar</td>
+                                <td>amit@example.com</td>
+                                <td>+91 98765 43212</td>
+                                <td>NGO Admin</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td>10 Nov 2023</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="approve-btn action-btn">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USER1004</td>
+                                <td>Neha Singh</td>
+                                <td>neha@example.com</td>
+                                <td>+91 98765 43213</td>
+                                <td>Requester</td>
+                                <td><span class="status status-blocked">Blocked</span></td>
+                                <td>5 Nov 2023</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="approve-btn action-btn">
+                                            <i class="fas fa-lock-open"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USER1005</td>
+                                <td>Rohit Srinivas</td>
+                                <td>rohit@example.com</td>
+                                <td>+91 98765 43214</td>
+                                <td>Contributor</td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>3 Nov 2023</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="edit-btn action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USER1006</td>
+                                <td>Hariharan K</td>
+                                <td>hari@example.com</td>
+                                <td>+91 98765 43215</td>
+                                <td>NGO Admin</td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>1 Nov 2023</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="edit-btn action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USER1007</td>
+                                <td>Rithika R</td>
+                                <td>rithika@example.com</td>
+                                <td>+91 98765 43216</td>
+                                <td>Requester</td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>28 Oct 2023</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="edit-btn action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USER1008</td>
+                                <td>Anjali Mehta</td>
+                                <td>anjali@example.com</td>
+                                <td>+91 98765 43217</td>
+                                <td>Contributor</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td>25 Oct 2023</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="view-btn action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="approve-btn action-btn">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="reject-btn action-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- NGO Management Tab -->
+        <div id="ngos" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>NGO Management</h3>
+                    <div class="section-actions">
+                        <button class="section-action-btn view-all">
+                            <i class="fas fa-plus"></i> Add New NGO
+                        </button>
+                        <button class="section-action-btn filter">
+                            <i class="fas fa-download"></i> Export NGOs
+                        </button>
+                    </div>
+                </div>
+
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <input
+                            type="text"
+                            placeholder="Search NGOs by name, email, or ID..."
+                        />
+                    </div>
+                    <select class="filter-select">
+                        <option>All Categories</option>
+                        <option>Medical</option>
+                        <option>Education</option>
+                        <option>Disaster Relief</option>
+                        <option>Environment</option>
+                        <option>Child Welfare</option>
+                        <option>Women Welfare</option>
+                        <option>Animal Welfare</option>
+                        <option>Livelihood</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Active</option>
+                        <option>Pending</option>
+                        <option>Suspended</option>
+                    </select>
+                    <button class="section-action-btn view-all">Apply Filters</button>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>NGO ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Registration No</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Join Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ngo-table-body">
+                            <!-- NGO data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Tab -->
+        <div id="categories" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>Campaign Categories</h3>
+                    <div class="section-actions">
+                        <button class="section-action-btn view-all">
+                            <i class="fas fa-plus"></i> Add New Category
+                        </button>
+                        <button class="section-action-btn filter">
+                            <i class="fas fa-download"></i> Export Categories
+                        </button>
+                    </div>
+                </div>
+
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <input
+                            type="text"
+                            placeholder="Search categories by name..."
+                        />
+                    </div>
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                    <button class="section-action-btn view-all">Apply Filters</button>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Category ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Total Campaigns</th>
+                                <th>Success Rate</th>
+                                <th>Status</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-table-body">
+                            <!-- Categories data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>Platform Analytics</h3>
+                    <div class="section-actions">
+                        <select
+                            style="
+                                padding: 0.75rem;
+                                border: 2px solid var(--border-color);
+                                border-radius: 8px;
+                            "
+                        >
+                            <option>Last 7 days</option>
+                            <option>Last 30 days</option>
+                            <option>Last 90 days</option>
+                            <option>Last year</option>
+                        </select>
+                        <button class="section-action-btn filter">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-cards">
+                    <div class="stat-card stat-1">
+                        <div class="stat-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>₹67.8L</h3>
+                            <p>Donations (Last 30 days)</p>
+                            <div class="trend-indicator trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>12.2% increase</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-2">
+                        <div class="stat-icon">
+                            <i class="fas fa-list-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>67</h3>
+                            <p>New Campaigns (Last 30 days)</p>
+                            <div class="trend-indicator trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>18% increase</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-3">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1,247</h3>
+                            <p>New Users (Last 30 days)</p>
+                            <div class="trend-indicator trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>24% increase</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-4">
+                        <div class="stat-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>82%</h3>
+                            <p>Success Rate</p>
+                            <div class="trend-indicator trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>7% improvement</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="analyticsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>Category-wise Distribution</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Management Tab -->
+        <div id="content" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>Homepage Content Management</h3>
+                </div>
+
+                <form id="content-form">
+                    <div class="form-group">
+                        <label class="form-label">Hero Section Title</label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="hero-title"
+                            value="Verified Help, Real Impact."
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Hero Section Description</label>
+                        <textarea class="form-textarea" id="hero-description">
+Sahayak is India's first Aadhaar-verified crowdfunding platform ensuring transparency and trust in every donation.</textarea
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Testimonials</label>
+                        <textarea class="form-textarea" id="testimonials">
+"Sahayak helped me raise funds for my father's surgery within days. The verification process made donors confident." - Rahul Sharma, Mumbai</textarea
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Impact Statistics</label>
+                        <textarea class="form-textarea" id="impact-stats">
+₹3.28Cr+ raised | 12,845+ verified users | 1,850+ successful campaigns</textarea
+                        >
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-save"></i>
+                        Update Homepage Content
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>Platform Settings</h3>
+                </div>
+
+                <form id="settings-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Platform Name</label>
+                            <input
+                                type="text"
+                                class="form-input"
+                                id="platform-name"
+                                value="Sahayak"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Admin Email</label>
+                            <input
+                                type="email"
+                                class="form-input"
+                                id="admin-email"
+                                value="admin@sahayak.org"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Supported UPI Providers</label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="upi-providers"
+                            value="Google Pay, PhonePe, Paytm, BHIM"
+                        />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Auto-approval for NGOs</label>
+                            <select class="form-select" id="auto-approval">
+                                <option value="no">Disabled</option>
+                                <option value="yes">Enabled</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Platform Fee (%)</label>
+                            <input
+                                type="number"
+                                class="form-input"
+                                id="donation-fee"
+                                value="2"
+                                min="0"
+                                max="10"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Notification Settings</label>
+                        <div style="display: flex; flex-direction: column; gap: 1rem">
+                            <label style="display: flex; align-items: center; gap: 0.75rem">
+                                <input type="checkbox" id="email-notifications" checked />
+                                <span>Email notifications for new requests</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.75rem">
+                                <input type="checkbox" id="sms-notifications" checked />
+                                <span>SMS notifications for urgent requests</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.75rem">
+                                <input type="checkbox" id="weekly-reports" />
+                                <span>Weekly performance reports</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-save"></i>
+                        Save Settings
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Details Modal -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="color: var(--primary-dark); margin-bottom: 1.5rem">
+                Request Details
+            </h2>
+            <div id="request-details">
+                <!-- Request details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Enhanced Sample Data
+        const sampleUsers = [
+            {
+                id: 1,
+                name: "Rahul Sharma",
+                email: "rahul@example.com",
+                phone: "+91 98765 43210",
+                role: "Requester",
+                status: "active",
+                joinDate: "15 Oct 2023",
+            },
+            {
+                id: 2,
+                name: "Priya Patel",
+                email: "priya@example.com",
+                phone: "+91 98765 43211",
+                role: "Contributor",
+                status: "active",
+                joinDate: "12 Oct 2023",
+            },
+            {
+                id: 3,
+                name: "Amit Kumar",
+                email: "amit@example.com",
+                phone: "+91 98765 43212",
+                role: "NGO Admin",
+                status: "pending",
+                joinDate: "10 Nov 2023",
+            },
+            {
+                id: 4,
+                name: "Neha Singh",
+                email: "neha@example.com",
+                phone: "+91 98765 43213",
+                role: "Requester",
+                status: "blocked",
+                joinDate: "5 Nov 2023",
+            },
+            {
+                id: 5,
+                name: "Rohit Srinivas",
+                email: "rohit@example.com",
+                phone: "+91 98765 43214",
+                role: "Contributor",
+                status: "active",
+                joinDate: "3 Nov 2023",
+            },
+            {
+                id: 6,
+                name: "Hariharan K",
+                email: "hari@example.com",
+                phone: "+91 98765 43215",
+                role: "NGO Admin",
+                status: "active",
+                joinDate: "1 Nov 2023",
+            },
+            {
+                id: 7,
+                name: "Rithika R",
+                email: "rithika@example.com",
+                phone: "+91 98765 43216",
+                role: "Requester",
+                status: "active",
+                joinDate: "28 Oct 2023",
+            },
+            {
+                id: 8,
+                name: "Anjali Mehta",
+                email: "anjali@example.com",
+                phone: "+91 98765 43217",
+                role: "Contributor",
+                status: "pending",
+                joinDate: "25 Oct 2023",
+            },
+            {
+                id: 9,
+                name: "Vikram Singh",
+                email: "vikram@example.com",
+                phone: "+91 98765 43218",
+                role: "Requester",
+                status: "active",
+                joinDate: "20 Oct 2023",
+            },
+            {
+                id: 10,
+                name: "Sneha Reddy",
+                email: "sneha@example.com",
+                phone: "+91 98765 43219",
+                role: "Contributor",
+                status: "active",
+                joinDate: "18 Oct 2023",
+            },
+        ];
+
+        // NGO Management Dummy Data
+        const sampleNGOs = [
+            {
+                id: "NGO1001",
+                name: "HelpIndia Foundation",
+                email: "contact@helpindia.org",
+                phone: "+91 98765 43210",
+                registrationNo: "A12345BC6789",
+                category: "Disaster Relief",
+                status: "active",
+                joinDate: "15 Mar 2022",
+                verified: true,
+                campaigns: 24,
+                totalRaised: "₹1.2Cr",
+                location: "New Delhi"
+            },
+            {
+                id: "NGO1002",
+                name: "Education for All Trust",
+                email: "info@eduforall.org",
+                phone: "+91 98765 43211",
+                registrationNo: "B23456CD7890",
+                category: "Education",
+                status: "active",
+                joinDate: "22 Jun 2022",
+                verified: true,
+                campaigns: 18,
+                totalRaised: "₹85L",
+                location: "Mumbai"
+            },
+            {
+                id: "NGO1003",
+                name: "Medical Aid Society",
+                email: "support@medaid.org",
+                phone: "+91 98765 43212",
+                registrationNo: "C34567DE8901",
+                category: "Medical",
+                status: "pending",
+                joinDate: "05 Nov 2023",
+                verified: false,
+                campaigns: 0,
+                totalRaised: "₹0",
+                location: "Bangalore"
+            },
+            {
+                id: "NGO1004",
+                name: "Green Earth Initiative",
+                email: "hello@greenearth.org",
+                phone: "+91 98765 43213",
+                registrationNo: "D45678EF9012",
+                category: "Environment",
+                status: "active",
+                joinDate: "30 Aug 2022",
+                verified: true,
+                campaigns: 12,
+                totalRaised: "₹45L",
+                location: "Chennai"
+            },
+            {
+                id: "NGO1005",
+                name: "Child Care Foundation",
+                email: "contact@childcare.org",
+                phone: "+91 98765 43214",
+                registrationNo: "E56789FG0123",
+                category: "Child Welfare",
+                status: "suspended",
+                joinDate: "12 Jan 2023",
+                verified: true,
+                campaigns: 8,
+                totalRaised: "₹32L",
+                location: "Kolkata"
+            },
+            {
+                id: "NGO1006",
+                name: "Rural Development Trust",
+                email: "info@ruraldev.org",
+                phone: "+91 98765 43215",
+                registrationNo: "F67890GH1234",
+                category: "Livelihood",
+                status: "active",
+                joinDate: "08 Sep 2022",
+                verified: true,
+                campaigns: 15,
+                totalRaised: "₹68L",
+                location: "Hyderabad"
+            },
+            {
+                id: "NGO1007",
+                name: "Women Empowerment Society",
+                email: "contact@womenempower.org",
+                phone: "+91 98765 43216",
+                registrationNo: "G78901HI2345",
+                category: "Women Welfare",
+                status: "pending",
+                joinDate: "18 Oct 2023",
+                verified: false,
+                campaigns: 0,
+                totalRaised: "₹0",
+                location: "Pune"
+            },
+            {
+                id: "NGO1008",
+                name: "Animal Rescue Network",
+                email: "help@animalrescue.org",
+                phone: "+91 98765 43217",
+                registrationNo: "H89012IJ3456",
+                category: "Animal Welfare",
+                status: "active",
+                joinDate: "25 Feb 2023",
+                verified: true,
+                campaigns: 9,
+                totalRaised: "₹28L",
+                location: "Ahmedabad"
+            }
+        ];
+
+        // Categories Dummy Data
+        const sampleCategories = [
+            {
+                id: "CAT1001",
+                name: "Medical Emergency",
+                description: "Fundraising for medical treatments, surgeries, and healthcare expenses",
+                totalCampaigns: 245,
+                successRate: "78%",
+                status: "active",
+                createdDate: "15 Jan 2022"
+            },
+            {
+                id: "CAT1002",
+                name: "Education Support",
+                description: "Funding for school fees, books, and educational resources",
+                totalCampaigns: 189,
+                successRate: "82%",
+                status: "active",
+                createdDate: "22 Feb 2022"
+            },
+            {
+                id: "CAT1003",
+                name: "Disaster Relief",
+                description: "Emergency funding for natural disasters and calamities",
+                totalCampaigns: 67,
+                successRate: "91%",
+                status: "active",
+                createdDate: "10 Mar 2022"
+            },
+            {
+                id: "CAT1004",
+                name: "Livelihood Support",
+                description: "Funding for small businesses, vocational training, and employment support",
+                totalCampaigns: 134,
+                successRate: "65%",
+                status: "active",
+                createdDate: "05 Apr 2022"
+            },
+            {
+                id: "CAT1005",
+                name: "Animal Welfare",
+                description: "Funding for animal rescue, shelters, and veterinary care",
+                totalCampaigns: 89,
+                successRate: "72%",
+                status: "active",
+                createdDate: "18 May 2022"
+            },
+            {
+                id: "CAT1006",
+                name: "Environment Conservation",
+                description: "Funding for environmental protection and conservation projects",
+                totalCampaigns: 56,
+                successRate: "68%",
+                status: "active",
+                createdDate: "22 Jun 2022"
+            },
+            {
+                id: "CAT1007",
+                name: "Women Empowerment",
+                description: "Funding for women's education, entrepreneurship, and skill development",
+                totalCampaigns: 78,
+                successRate: "74%",
+                status: "inactive",
+                createdDate: "30 Jul 2022"
+            },
+            {
+                id: "CAT1008",
+                name: "Child Welfare",
+                description: "Funding for children's healthcare, education, and basic needs",
+                totalCampaigns: 112,
+                successRate: "79%",
+                status: "active",
+                createdDate: "14 Aug 2022"
+            }
+        ];
+
+        // DOM Elements
+        const navLinks = document.querySelectorAll(".nav-links a");
+        const tabContents = document.querySelectorAll(".tab-content");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const refreshBtn = document.getElementById("refreshBtn");
+        const exportBtn = document.getElementById("exportBtn");
+        const requestModal = document.getElementById("requestModal");
+        const closeModals = document.querySelectorAll(".close-modal");
+        const tabs = document.querySelectorAll(".tab");
+        const requestTabs = document.querySelectorAll("[data-request-tab]");
+        const actionButtons = document.querySelectorAll(".action-btn");
+
+        // Initialize the page
+        document.addEventListener("DOMContentLoaded", function () {
+            // Set up event listeners
+            setupEventListeners();
+
+            // Initialize Charts
+            initializeCharts();
+            
+            // Populate NGO table
+            populateNGOTable();
+            
+            // Populate Categories table
+            populateCategoriesTable();
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Tab Navigation
+            navLinks.forEach((link) => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    // Remove active class from all links
+                    navLinks.forEach((a) => {
+                        a.classList.remove("active");
+                    });
+
+                    // Add active class to clicked link
+                    this.classList.add("active");
+
+                    // Hide all tab contents
+                    tabContents.forEach((tab) => {
+                        tab.classList.remove("active");
+                    });
+
+                    // Show the selected tab content
+                    const tabId = this.getAttribute("data-tab");
+                    document.getElementById(tabId).classList.add("active");
+
+                    // Update page title
+                    document.getElementById("page-title").textContent =
+                        this.querySelector("span").textContent;
+                });
+            });
+
+            // Request Tabs
+            requestTabs.forEach((tab) => {
+                tab.addEventListener("click", function () {
+                    // Remove active class from all tabs
+                    requestTabs.forEach((t) => {
+                        t.classList.remove("active");
+                    });
+
+                    // Add active class to clicked tab
+                    this.classList.add("active");
+
+                    // In a real application, we would filter the requests here
+                    const tabId = this.getAttribute("data-request-tab");
+                    alert(`Loading ${tabId} requests...`);
+                });
+            });
+
+            // Action Buttons
+            actionButtons.forEach((btn) => {
+                btn.addEventListener("click", function () {
+                    const action = this.classList.contains("approve-btn")
+                        ? "approve"
+                        : this.classList.contains("reject-btn")
+                        ? "reject"
+                        : this.classList.contains("view-btn")
+                        ? "view"
+                        : "edit";
+
+                    if (action === "view") {
+                        // Show request details modal
+                        document.getElementById("requestModal").style.display = "flex";
+                    } else {
+                        // In a real application, this would make an API call
+                        const row = this.closest("tr");
+                        if (row) {
+                            const itemId = row.querySelector("td:first-child").textContent;
+                            alert(`Item ${itemId} has been ${action}d.`);
+
+                            if (action === "approve") {
+                                const statusElement = row.querySelector(".status");
+                                if (statusElement) {
+                                    statusElement.className = "status status-approved";
+                                    statusElement.textContent = "Approved";
+                                }
+                            } else if (action === "reject") {
+                                const statusElement = row.querySelector(".status");
+                                if (statusElement) {
+                                    statusElement.className = "status status-rejected";
+                                    statusElement.textContent = "Rejected";
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Close Modal
+            closeModals.forEach((btn) => {
+                btn.addEventListener("click", function () {
+                    this.closest(".modal").style.display = "none";
+                });
+            });
+
+            // Logout Button
+            logoutBtn.addEventListener("click", function () {
+                if (confirm("Are you sure you want to logout?")) {
+                    // In a real application, this would clear the session and redirect
+                    alert("Logged out successfully. Redirecting to login page.");
+                    // window.location.href = 'login.html';
+                }
+            });
+
+            // Refresh Button
+            refreshBtn.addEventListener("click", function () {
+                // In a real application, this would refresh the data
+                alert("Data refreshed successfully.");
+            });
+
+            // Export Button
+            exportBtn.addEventListener("click", function () {
+                alert("Exporting dashboard data...");
+            });
+
+            // Form Submissions
+            document
+                .getElementById("content-form")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    alert("Homepage content updated successfully.");
+                });
+
+            document
+                .getElementById("settings-form")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    alert("Platform settings saved successfully.");
+                });
+
+            // Close modal when clicking outside
+            window.addEventListener("click", function (e) {
+                if (e.target.classList.contains("modal")) {
+                    e.target.style.display = "none";
+                }
+            });
+
+            // Sidebar toggle
+            document
+                .querySelector(".toggle-sidebar")
+                .addEventListener("click", function () {
+                    document.querySelector(".sidebar").classList.toggle("collapsed");
+                    document
+                        .querySelector(".main-content")
+                        .classList.toggle("expanded");
+                });
+        }
+
+        // Function to populate NGO table
+        function populateNGOTable() {
+            const tableBody = document.getElementById("ngo-table-body");
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = "";
+            
+            sampleNGOs.forEach(ngo => {
+                const statusClass = ngo.status === 'active' ? 'status-active' : 
+                                ngo.status === 'pending' ? 'status-pending' : 'status-blocked';
+                const statusText = ngo.status === 'active' ? 'Active' : 
+                                ngo.status === 'pending' ? 'Pending' : 'Suspended';
+                
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${ngo.id}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                ${ngo.name.charAt(0)}
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">${ngo.name}</div>
+                                <small style="color: var(--dark-gray); opacity: 0.7;">${ngo.location}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${ngo.email}</td>
+                    <td>${ngo.phone}</td>
+                    <td>${ngo.registrationNo}</td>
+                    <td>${ngo.category}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td>${ngo.joinDate}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                            <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            ${ngo.status === 'active' ? 
+                                '<button class="reject-btn action-btn"><i class="fas fa-ban"></i></button>' : 
+                                '<button class="approve-btn action-btn"><i class="fas fa-check"></i></button>'}
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Add event listeners to NGO action buttons
+            document.querySelectorAll("#ngo-table-body .action-btn").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    const row = this.closest("tr");
+                    const ngoId = row.querySelector("td:first-child").textContent;
+                    const ngoName = row.querySelector("td:nth-child(2) div div").textContent;
+                    
+                    if (this.classList.contains("view-btn")) {
+                        alert(`View details for ${ngoName} (${ngoId})`);
+                    } else if (this.classList.contains("edit-btn")) {
+                        alert(`Edit ${ngoName} (${ngoId})`);
+                    } else if (this.classList.contains("approve-btn")) {
+                        alert(`Approve ${ngoName} (${ngoId})`);
+                        const statusElement = row.querySelector(".status");
+                        statusElement.className = "status status-active";
+                        statusElement.textContent = "Active";
+                    } else if (this.classList.contains("reject-btn")) {
+                        alert(`Suspend ${ngoName} (${ngoId})`);
+                        const statusElement = row.querySelector(".status");
+                        statusElement.className = "status status-blocked";
+                        statusElement.textContent = "Suspended";
+                    }
+                });
+            });
+        }
+
+        // Function to populate Categories table
+        function populateCategoriesTable() {
+            const tableBody = document.getElementById("categories-table-body");
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = "";
+            
+            sampleCategories.forEach(category => {
+                const statusClass = category.status === 'active' ? 'status-active' : 'status-blocked';
+                const statusText = category.status === 'active' ? 'Active' : 'Inactive';
+                
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${category.id}</td>
+                    <td>
+                        <div style="font-weight: 600;">${category.name}</div>
+                    </td>
+                    <td>${category.description}</td>
+                    <td>${category.totalCampaigns}</td>
+                    <td>
+                        <div style="font-weight: 600; color: var(--secondary);">${category.successRate}</div>
+                    </td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td>${category.createdDate}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                            <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            ${category.status === 'active' ? 
+                                '<button class="reject-btn action-btn"><i class="fas fa-ban"></i></button>' : 
+                                '<button class="approve-btn action-btn"><i class="fas fa-check"></i></button>'}
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Add event listeners to Categories action buttons
+            document.querySelectorAll("#categories-table-body .action-btn").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    const row = this.closest("tr");
+                    const categoryId = row.querySelector("td:first-child").textContent;
+                    const categoryName = row.querySelector("td:nth-child(2) div").textContent;
+                    
+                    if (this.classList.contains("view-btn")) {
+                        alert(`View details for ${categoryName} (${categoryId})`);
+                    } else if (this.classList.contains("edit-btn")) {
+                        alert(`Edit ${categoryName} (${categoryId})`);
+                    } else if (this.classList.contains("approve-btn")) {
+                        alert(`Activate ${categoryName} (${categoryId})`);
+                        const statusElement = row.querySelector(".status");
+                        statusElement.className = "status status-active";
+                        statusElement.textContent = "Active";
+                    } else if (this.classList.contains("reject-btn")) {
+                        alert(`Deactivate ${categoryName} (${categoryId})`);
+                        const statusElement = row.querySelector(".status");
+                        statusElement.className = "status status-blocked";
+                        statusElement.textContent = "Inactive";
+                    }
+                });
+            });
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Analytics Chart
+            const analyticsCtx = document.getElementById("analyticsChart");
+            if (analyticsCtx) {
+                new Chart(analyticsCtx.getContext("2d"), {
+                    type: "line",
+                    data: {
+                        labels: [
+                            "Jan",
+                            "Feb",
+                            "Mar",
+                            "Apr",
+                            "May",
+                            "Jun",
+                            "Jul",
+                            "Aug",
+                            "Sep",
+                            "Oct",
+                            "Nov",
+                        ],
+                        datasets: [
+                            {
+                                label: "Donations (in ₹ lakhs)",
+                                data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 40, 45],
+                                borderColor: "#10b981",
+                                backgroundColor: "rgba(16, 185, 129, 0.1)",
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4,
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: "rgba(0, 0, 0, 0.05)",
+                                },
+                            },
+                            x: {
+                                grid: {
+                                    display: false,
+                                },
+                            },
+                        },
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                        },
+                    },
+                });
+            }
+
+            // Category Chart
+            const categoryCtx = document.getElementById("categoryChart");
+            if (categoryCtx) {
+                new Chart(categoryCtx.getContext("2d"), {
+                    type: "doughnut",
+                    data: {
+                        labels: [
+                            "Medical",
+                            "Education",
+                            "Disaster Relief",
+                            "Livelihood",
+                            "Other",
+                        ],
+                        datasets: [
+                            {
+                                data: [40, 25, 15, 12, 8],
+                                backgroundColor: [
+                                    "#0ea5e9",
+                                    "#10b981",
+                                    "#8b5cf6",
+                                    "#f59e0b",
+                                    "#ef4444",
+                                ],
+                                borderWidth: 0,
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: "bottom",
+                            },
+                        },
+                    },
+                });
+            }
+        }
+    </script>
+</body>
+</html>

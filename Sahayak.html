@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahayak - India's Trusted Aadhaar-Verified Crowdfunding Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --white: #FFFFFF;
+            --green: #138808;
+            --blue: #000080;
+            --light-blue: #1E40AF;
+            --light-green: #22C55E;
+            --light-saffron: #F59E0B;
+            --gray: #F8FAFC;
+            --dark-gray: #334155;
+            --text-dark: #1E293B;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+        }
+        
+        body {
+            background-color: var(--white);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--saffron) 0%, var(--white) 50%, var(--green) 100%);
+            color: var(--blue);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.8rem;
+            text-decoration: none;
+            color: var(--blue);
+        }
+        
+        .logo i {
+            margin-right: 12px;
+            font-size: 2.2rem;
+            color: var(--blue);
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover i {
+            transform: rotate(15deg);
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        
+        .logo-subtitle {
+            font-size: 0.7rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav ul li a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--blue);
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover:after {
+            width: 80%;
+            left: 10%;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .auth-btn {
+            background-color: var(--blue);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-btn:hover {
+            background-color: var(--light-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .auth-btn.secondary {
+            background-color: transparent;
+            color: var(--blue);
+            border: 2px solid var(--blue);
+        }
+        
+        .auth-btn.secondary:hover {
+            background-color: rgba(0, 0, 128, 0.1);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(255, 153, 51, 0.9) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(19, 136, 8, 0.9) 100%), 
+                        url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--blue);
+            text-align: center;
+            padding: 8rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin: 0 auto 2.5rem;
+            max-width: 700px;
+            font-weight: 500;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            min-width: 180px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-text {
+            font-size: 1rem;
+            color: var(--dark-gray);
+            font-weight: 600;
+        }
+        
+        .cta-buttons {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .cta-btn {
+            background-color: var(--blue);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .cta-btn.primary {
+            background: linear-gradient(135deg, var(--saffron), var(--light-saffron));
+        }
+        
+        .cta-btn.secondary {
+            background: linear-gradient(135deg, var(--green), var(--light-green));
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 6rem 2rem;
+        }
+        
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--blue);
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--dark-gray);
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(to right, var(--saffron), var(--white), var(--green));
+            margin: 1.5rem auto;
+            border-radius: 5px;
+        }
+        
+        /* How it Works */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 280px;
+            text-align: center;
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            background-color: var(--white);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .step:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--saffron), var(--green));
+        }
+        
+        .step:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--blue);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .step i {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--saffron), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .step h3 {
+            margin-bottom: 1rem;
+            color: var(--blue);
+            font-size: 1.5rem;
+        }
+        
+        /* Categories */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .category {
+            background-color: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .category:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .category-icon {
+            background: linear-gradient(135deg, var(--saffron), var(--green));
+            color: white;
+            padding: 2.5rem;
+            text-align: center;
+            font-size: 3rem;
+        }
+        
+        .category-content {
+            padding: 2rem;
+        }
+        
+        .category-content h3 {
+            margin-bottom: 1rem;
+            color: var(--blue);
+            font-size: 1.5rem;
+        }
+        
+        .category-content p {
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--blue);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .category-link:hover {
+            color: var(--light-blue);
+            gap: 0.5rem;
+        }
+        
+        /* Request Cards */
+        .requests {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .request-card {
+            background-color: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .request-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .request-header {
+            background: linear-gradient(135deg, var(--saffron), var(--green));
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .request-category {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .verified-badge {
+            background-color: var(--blue);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .request-content {
+            padding: 2rem;
+        }
+        
+        .request-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--blue);
+        }
+        
+        .request-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+        
+        .request-meta div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .request-description {
+            margin-bottom: 1.5rem;
+            color: var(--dark-gray);
+            line-height: 1.7;
+        }
+        
+        .progress-container {
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--gray);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--saffron), var(--green));
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+        
+        .donate-btn {
+            background: linear-gradient(135deg, var(--blue), var(--light-blue));
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 128, 0.2);
+        }
+        
+        .donate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 128, 0.3);
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            background: linear-gradient(135deg, rgba(255, 153, 51, 0.05) 0%, rgba(19, 136, 8, 0.05) 100%);
+            border-radius: 20px;
+            padding: 4rem;
+        }
+        
+        .testimonial-cards {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            min-width: 350px;
+            position: relative;
+        }
+        
+        .testimonial-card:before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            font-size: 4rem;
+            color: rgba(0, 0, 128, 0.1);
+            font-family: serif;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            color: var(--dark-gray);
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--saffron), var(--green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .author-info h4 {
+            color: var(--blue);
+            margin-bottom: 0.2rem;
+        }
+        
+        .author-info p {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+        
+        /* Forms */
+        .form-container {
+            background-color: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 3rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.7rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #E2E8F0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--saffron), var(--green));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            box-shadow: 0 6px 15px rgba(255, 153, 51, 0.3);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 153, 51, 0.4);
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--saffron) 0%, var(--white) 50%, var(--green) 100%);
+            color: var(--blue);
+            padding: 2.5rem;
+            border-radius: 16px 16px 0 0;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-nav {
+            display: flex;
+            background-color: var(--gray);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashboard-nav button {
+            flex: 1;
+            padding: 1.2rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--dark-gray);
+        }
+        
+        .dashboard-nav button.active {
+            background: linear-gradient(135deg, var(--saffron), var(--green));
+            color: white;
+        }
+        
+        .dashboard-content {
+            min-height: 500px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--saffron) 0%, var(--white) 50%, var(--green) 100%);
+            color: var(--blue);
+            padding: 5rem 2rem 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            text-align: left;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 2px solid var(--blue);
+            display: inline-block;
+            font-size: 1.3rem;
+        }
+        
+        .footer-section p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-section ul li a {
+            color: var(--blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-section ul li a:hover {
+            color: var(--light-blue);
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--light-blue);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 128, 0.2);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.4s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-modal:hover {
+            background: #FEE2E2;
+            color: #EF4444;
+            transform: rotate(90deg);
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-2 {
+            margin-top: 2rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .steps {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .auth-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .hero {
+                padding: 6rem 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                gap: 1.5rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            section {
+                padding: 4rem 1.5rem;
+            }
+            
+            .testimonial-cards {
+                flex-direction: column;
+            }
+            
+            .testimonial-card {
+                min-width: auto;
+            }
+            
+            .form-container {
+                padding: 2rem;
+            }
+            
+            .dashboard-nav {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .stat {
+                min-width: 140px;
+                padding: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-hands-helping"></i>
+                <div class="logo-text">
+                    <span>Sahayak</span>
+                    <span class="logo-subtitle">Verified Help, Real Impact</span>
+                </div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#categories">Categories</a></li>
+                    <li><a href="#requests">Active Requests</a></li>
+                    <li><a href="#testimonials">Success Stories</a></li>
+                    <li><a href="#about">About Us</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="auth-btn secondary" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </button>
+                <button class="auth-btn" id="signupBtn">
+                    <i class="fas fa-user-plus"></i>
+                    Sign Up
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>India's Trusted Aadhaar-Verified Crowdfunding Platform</h1>
+            <p>Transparent, Secure, and Impactful - Empowering Indians to support each other in times of need with verified identities and secure UPI payments.</p>
+            <div class="cta-buttons">
+                <button class="cta-btn primary" id="contributeNow">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    Contribute Now
+                </button>
+                <button class="cta-btn secondary" id="requestHelp">
+                    <i class="fas fa-plus-circle"></i>
+                    Request Help
+                </button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">₹3.28Cr+</div>
+                    <div class="stat-text">Total Donations</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">12,845+</div>
+                    <div class="stat-text">Verified Users</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">1,850+</div>
+                    <div class="stat-text">Successful Campaigns</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-text">Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>How Sahayak Works</h2>
+                <p>Our simple three-step process ensures complete transparency and security for both requesters and donors</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <i class="fas fa-id-card-alt"></i>
+                    <h3>Aadhaar Verification</h3>
+                    <p>Every user verifies their identity using Aadhaar to ensure complete transparency and build trust within our community.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h3>Create or Browse Requests</h3>
+                    <p>Request financial help during emergencies or browse verified requests categorized by need to make meaningful contributions.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure UPI Donations</h3>
+                    <p>Donate securely via UPI with complete transaction transparency. Every rupee is tracked and accounted for.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>Campaign Categories</h2>
+                <p>Browse funding requests by category to support causes that matter most to you</p>
+            </div>
+            <div class="categories">
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Medical Emergencies</h3>
+                        <p>Support individuals facing critical health issues, surgeries, and medical treatments when insurance falls short.</p>
+                        <a href="#" class="category-link">
+                            View Requests
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Education Support</h3>
+                        <p>Help students continue their education despite financial constraints - from school fees to higher education.</p>
+                        <a href="#" class="category-link">
+                            View Requests
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-house-damage"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Disaster Relief</h3>
+                        <p>Provide immediate assistance to families affected by natural disasters like floods, earthquakes, and cyclones.</p>
+                        <a href="#" class="category-link">
+                            View Requests
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>NGO Campaigns</h3>
+                        <p>Support verified NGO initiatives working on community development, animal welfare, and environmental causes.</p>
+                        <a href="#" class="category-link">
+                            View Requests
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Active Requests Section -->
+    <section id="requests">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>Urgent Funding Requests</h2>
+                <p>These verified individuals need your support today. Every contribution makes a difference.</p>
+            </div>
+            <div class="requests">
+                <!-- Request cards will be populated by JavaScript -->
+            </div>
+            <div class="text-center mt-2">
+                <button class="cta-btn primary" id="viewAllRequests">
+                    <i class="fas fa-list"></i>
+                    View All Requests
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>Success Stories</h2>
+                <p>Hear from those whose lives have been transformed through the generosity of our community</p>
+            </div>
+            <div class="testimonials">
+                <div class="testimonial-cards">
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "When my father needed emergency heart surgery, we had exhausted all our savings. Sahayak helped us raise ₹4.5 lakhs in just 10 days. The Aadhaar verification gave donors confidence, and the UPI payments made it so easy for people to contribute."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">RK</div>
+                            <div class="author-info">
+                                <h4>Rajesh Kumar</h4>
+                                <p>Mumbai, Maharashtra</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "As a teacher in a rural school, I wanted to set up a computer lab but had no funds. Through Sahayak, I raised ₹2.8 lakhs and transformed our classroom. Now my students are learning digital skills that will change their futures."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">PS</div>
+                            <div class="author-info">
+                                <h4>Priya Sharma</h4>
+                                <p>Uttar Pradesh</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "After the floods destroyed our home in Assam, we had nowhere to turn. Sahayak connected us with generous donors who helped us rebuild. The platform's transparency meant people knew exactly where their money was going."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">AS</div>
+                            <div class="author-info">
+                                <h4>Amit & Sunita</h4>
+                                <p>Assam</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>About Sahayak</h2>
+                <p>Our mission is to create India's most trusted crowdfunding ecosystem</p>
+            </div>
+            <div class="text-center">
+                <p>Sahayak is a secure, Aadhaar-authenticated crowdfunding platform where verified users can raise financial requests during emergencies. Unlike other platforms, we prioritize transparency and accountability through identity verification and detailed tracking of fund utilization.</p>
+                <p class="mt-2">Our platform operates as a SaaS model, offering admin access to NGOs and super-admin control to platform owners, ensuring complete transparency and accountability in the crowdfunding process. We partner with banks and UPI providers to facilitate seamless, secure transactions.</p>
+                <div class="cta-buttons mt-2">
+                    <button class="cta-btn primary" id="learnMoreBtn">
+                        <i class="fas fa-info-circle"></i>
+                        Learn More About Us
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard (Initially Hidden) -->
+    <section class="dashboard" id="dashboard">
+        <div class="section-container">
+            <div class="dashboard-header">
+                <h2>User Dashboard</h2>
+                <p>Welcome back, <span id="userName">User</span>! Here's your activity overview.</p>
+            </div>
+            
+            <div class="dashboard-nav">
+                <button class="nav-btn active" data-tab="overview">Overview</button>
+                <button class="nav-btn" data-tab="my-requests">My Requests</button>
+                <button class="nav-btn" data-tab="donation-history">Donation History</button>
+                <button class="nav-btn" data-tab="profile">Profile</button>
+                <button class="nav-btn" id="logoutBtn">Logout</button>
+            </div>
+            
+            <div class="dashboard-content">
+                <div id="overview" class="tab-content active">
+                    <h3>Dashboard Overview</h3>
+                    <p>Welcome to your Sahayak dashboard. Here you can manage your funding requests, track donations, and update your profile.</p>
+                    
+                    <div class="stats mt-2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--saffron), var(--light-saffron)); padding: 2rem; border-radius: 16px; color: white;">
+                            <h4>Total Donations Received</h4>
+                            <p style="font-size: 2.5rem; font-weight: bold;">₹0</p>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--green), var(--light-green)); padding: 2rem; border-radius: 16px; color: white;">
+                            <h4>Active Requests</h4>
+                            <p style="font-size: 2.5rem; font-weight: bold;">0</p>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--blue), var(--light-blue)); padding: 2rem; border-radius: 16px; color: white;">
+                            <h4>Total Contributions</h4>
+                            <p style="font-size: 2.5rem; font-weight: bold;">₹0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="my-requests" class="tab-content">
+                    <h3>My Funding Requests</h3>
+                    <p>You haven't created any funding requests yet.</p>
+                    <button class="cta-btn primary mt-2" id="createRequestBtn">
+                        <i class="fas fa-plus"></i>
+                        Create New Request
+                    </button>
+                </div>
+                
+                <div id="donation-history" class="tab-content">
+                    <h3>Donation History</h3>
+                    <p>You haven't made any donations yet.</p>
+                    <div class="text-center mt-2">
+                        <button class="cta-btn primary" id="browseRequestsBtn">
+                            <i class="fas fa-search"></i>
+                            Browse Requests
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="profile" class="tab-content">
+                    <h3>Profile Settings</h3>
+                    <div class="form-container">
+                        <div class="form-group">
+                            <label for="profileName">Full Name</label>
+                            <input type="text" id="profileName" value="User">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileEmail">Email</label>
+                            <input type="email" id="profileEmail" value="user@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePhone">Phone Number</label>
+                            <input type="tel" id="profilePhone" value="+91 XXXXXXXXXX">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileUPI">UPI ID</label>
+                            <input type="text" id="profileUPI" value="user@upi">
+                        </div>
+                        <button class="submit-btn">
+                            <i class="fas fa-save"></i>
+                            Update Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Sahayak</h3>
+                <p>Sahayak is India's first Aadhaar-verified crowdfunding platform ensuring transparency and trust in every donation.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#how-it-works"><i class="fas fa-cogs"></i> How It Works</a></li>
+                    <li><a href="#categories"><i class="fas fa-tags"></i> Categories</a></li>
+                    <li><a href="#requests"><i class="fas fa-hand-holding-usd"></i> Active Requests</a></li>
+                    <li><a href="#testimonials"><i class="fas fa-star"></i> Success Stories</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                    <li><a href="#"><i class="fas fa-file-alt"></i> Blog</a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                    <li><a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+                    <li><a href="#"><i class="fas fa-handshake"></i> For NGOs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><a href="mailto:support@sahayak.org"><i class="fas fa-envelope"></i> support@sahayak.org</a></li>
+                    <li><a href="tel:+919840216854"><i class="fas fa-phone"></i> +91 98402 16854</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Chennai, India</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Sahayak - Verified Crowdfunding Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Login to Sahayak</h2>
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="loginPhone">Phone Number</label>
+                    <input type="tel" id="loginPhone" placeholder="+91 XXXXXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label for="loginOTP">OTP</label>
+                    <input type="text" id="loginOTP" placeholder="Enter OTP">
+                    <button class="submit-btn mt-2" id="sendOTP">
+                        <i class="fas fa-paper-plane"></i>
+                        Send OTP
+                    </button>
+                </div>
+                <button class="submit-btn" id="loginSubmit">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </button>
+                <p class="text-center mt-2">Don't have an account? <a href="#" id="switchToSignup">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create an Account</h2>
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number</label>
+                    <input type="tel" id="signupPhone" placeholder="+91 XXXXXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label for="signupAadhaar">Aadhaar Number</label>
+                    <input type="text" id="signupAadhaar" placeholder="Enter 12-digit Aadhaar">
+                </div>
+                <div class="form-group">
+                    <label for="signupRole">Account Type</label>
+                    <select id="signupRole">
+                        <option value="contributor">Contributor</option>
+                        <option value="requester">Requester</option>
+                        <option value="ngo">NGO Admin</option>
+                    </select>
+                </div>
+                <button class="submit-btn" id="signupSubmit">
+                    <i class="fas fa-user-check"></i>
+                    Verify & Create Account
+                </button>
+                <p class="text-center mt-2">Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Request Modal -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create Funding Request</h2>
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="requestTitle">Request Title</label>
+                    <input type="text" id="requestTitle" placeholder="Brief title for your request">
+                </div>
+                <div class="form-group">
+                    <label for="requestCategory">Category</label>
+                    <select id="requestCategory">
+                        <option value="medical">Medical Emergency</option>
+                        <option value="education">Education</option>
+                        <option value="disaster">Disaster Relief</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="requestAmount">Amount Needed (₹)</label>
+                    <input type="number" id="requestAmount" placeholder="Enter amount in INR">
+                </div>
+                <div class="form-group">
+                    <label for="requestDescription">Description</label>
+                    <textarea id="requestDescription" placeholder="Describe your emergency and how the funds will be used"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="requestProof">Upload Proof (Image/PDF)</label>
+                    <input type="file" id="requestProof">
+                </div>
+                <button class="submit-btn" id="requestSubmit">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit for Approval
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for requests
+        const sampleRequests = [
+            {
+                id: 1,
+                title: "Emergency Heart Surgery",
+                category: "medical",
+                requester: "Rajesh Kumar",
+                verified: true,
+                amountNeeded: 500000,
+                amountRaised: 250000,
+                description: "My father needs an urgent heart surgery. We have already spent all our savings on preliminary treatments and now need help for the surgery itself. The doctors say it cannot be delayed any further.",
+                location: "Mumbai, Maharashtra",
+                donors: 124,
+                daysLeft: 12
+            },
+            {
+                id: 2,
+                title: "College Fees for Meritorious Student",
+                category: "education",
+                requester: "Priya Singh",
+                verified: true,
+                amountNeeded: 100000,
+                amountRaised: 45000,
+                description: "I have secured admission in IIT Delhi but cannot afford the tuition fees. My family income is very low and I don't want to miss this opportunity to get quality education.",
+                location: "Delhi",
+                donors: 67,
+                daysLeft: 25
+            },
+            {
+                id: 3,
+                title: "Flood Relief in Assam",
+                category: "disaster",
+                requester: "Assam Relief NGO",
+                verified: true,
+                amountNeeded: 1000000,
+                amountRaised: 620000,
+                description: "Providing essential supplies like food, water, and medicine to families affected by recent floods in Assam. Over 500 families have lost their homes and belongings.",
+                location: "Assam",
+                donors: 289,
+                daysLeft: 8
+            },
+            {
+                id: 4,
+                title: "Cancer Treatment for Child",
+                category: "medical",
+                requester: "Anita Sharma",
+                verified: true,
+                amountNeeded: 800000,
+                amountRaised: 310000,
+                description: "My 8-year-old daughter has been diagnosed with leukemia. We need help for her chemotherapy and ongoing treatment. She is a brave child and we want to give her the best chance at recovery.",
+                location: "Bangalore, Karnataka",
+                donors: 153,
+                daysLeft: 18
+            },
+            {
+                id: 5,
+                title: "School Renovation in Rural Village",
+                category: "education",
+                requester: "Gramin Shiksha Trust",
+                verified: true,
+                amountNeeded: 750000,
+                amountRaised: 420000,
+                description: "Our village school needs urgent renovation. The roof leaks during monsoon, and we need proper desks and teaching materials. Help us provide a better learning environment for 200+ children.",
+                location: "Jharkhand",
+                donors: 98,
+                daysLeft: 32
+            },
+            {
+                id: 6,
+                title: "Support for Acid Attack Survivor",
+                category: "medical",
+                requester: "Shakti Foundation",
+                verified: true,
+                amountNeeded: 1200000,
+                amountRaised: 780000,
+                description: "Funding reconstructive surgeries and rehabilitation for an acid attack survivor. She needs multiple surgeries to regain basic functions and rebuild her life with dignity.",
+                location: "Kolkata, West Bengal",
+                donors: 342,
+                daysLeft: 15
+            }
+        ];
+
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const loginModal = document.getElementById('loginModal');
+        const signupModal = document.getElementById('signupModal');
+        const requestModal = document.getElementById('requestModal');
+        const closeModals = document.querySelectorAll('.close-modal');
+        const switchToSignup = document.getElementById('switchToSignup');
+        const switchToLogin = document.getElementById('switchToLogin');
+        const contributeNow = document.getElementById('contributeNow');
+        const requestHelp = document.getElementById('requestHelp');
+        const loginSubmit = document.getElementById('loginSubmit');
+        const signupSubmit = document.getElementById('signupSubmit');
+        const sendOTP = document.getElementById('sendOTP');
+        const dashboard = document.getElementById('dashboard');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const createRequestBtn = document.getElementById('createRequestBtn');
+        const requestSubmit = document.getElementById('requestSubmit');
+        const requestsContainer = document.querySelector('.requests');
+        const viewAllRequests = document.getElementById('viewAllRequests');
+        const browseRequestsBtn = document.getElementById('browseRequestsBtn');
+        const learnMoreBtn = document.getElementById('learnMoreBtn');
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('sahayakLoggedIn');
+            if (isLoggedIn) {
+                showDashboard();
+            }
+            
+            // Populate requests
+            populateRequests();
+            
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Add scroll effect to header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) {
+                    header.style.padding = '0.7rem 2rem';
+                    header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                } else {
+                    header.style.padding = '1rem 2rem';
+                    header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                }
+            });
+        });
+
+        // Populate requests on the page
+        function populateRequests() {
+            requestsContainer.innerHTML = '';
+            
+            sampleRequests.forEach(request => {
+                const progress = (request.amountRaised / request.amountNeeded) * 100;
+                const progressWidth = progress > 100 ? 100 : progress;
+                
+                const requestCard = document.createElement('div');
+                requestCard.className = 'request-card';
+                requestCard.innerHTML = `
+                    <div class="request-header">
+                        <span class="request-category">${request.category.charAt(0).toUpperCase() + request.category.slice(1)}</span>
+                        <span class="verified-badge">
+                            <i class="fas fa-check-circle"></i>
+                            Verified
+                        </span>
+                    </div>
+                    <div class="request-content">
+                        <h3 class="request-title">${request.title}</h3>
+                        <div class="request-meta">
+                            <div>
+                                <i class="fas fa-user"></i>
+                                ${request.requester}
+                            </div>
+                            <div>
+                                <i class="fas fa-map-marker-alt"></i>
+                                ${request.location}
+                            </div>
+                            <div>
+                                <i class="fas fa-users"></i>
+                                ${request.donors} donors
+                            </div>
+                        </div>
+                        <p class="request-description">${request.description}</p>
+                        <div class="progress-container">
+                            <div class="progress-info">
+                                <span>₹${request.amountRaised.toLocaleString()} raised</span>
+                                <span>${progress.toFixed(1)}%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: ${progressWidth}%"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span>Goal: ₹${request.amountNeeded.toLocaleString()}</span>
+                                <span>${request.daysLeft} days left</span>
+                            </div>
+                        </div>
+                        <button class="donate-btn" data-id="${request.id}">
+                            <i class="fas fa-donate"></i>
+                            Donate Now
+                        </button>
+                    </div>
+                `;
+                
+                requestsContainer.appendChild(requestCard);
+            });
+            
+            // Add event listeners to donate buttons
+            document.querySelectorAll('.donate-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const requestId = this.getAttribute('data-id');
+                    if (localStorage.getItem('sahayakLoggedIn')) {
+                        alert(`Donation process initiated for request #${requestId}. You would be redirected to UPI payment.`);
+                    } else {
+                        alert('Please login to make a donation.');
+                        loginModal.style.display = 'flex';
+                    }
+                });
+            });
+        }
+
+        // Show/hide modals
+        loginBtn.addEventListener('click', () => loginModal.style.display = 'flex');
+        signupBtn.addEventListener('click', () => signupModal.style.display = 'flex');
+        contributeNow.addEventListener('click', () => {
+            if (localStorage.getItem('sahayakLoggedIn')) {
+                document.querySelector('[data-tab="overview"]').click();
+                showDashboard();
+                window.scrollTo(0, 0);
+            } else {
+                loginModal.style.display = 'flex';
+            }
+        });
+        requestHelp.addEventListener('click', () => {
+            if (localStorage.getItem('sahayakLoggedIn')) {
+                requestModal.style.display = 'flex';
+            } else {
+                alert('Please login to create a funding request.');
+                loginModal.style.display = 'flex';
+            }
+        });
+        viewAllRequests.addEventListener('click', () => {
+            if (localStorage.getItem('sahayakLoggedIn')) {
+                document.querySelector('[data-tab="overview"]').click();
+                showDashboard();
+                window.scrollTo(0, 0);
+            } else {
+                loginModal.style.display = 'flex';
+            }
+        });
+        browseRequestsBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: document.getElementById('requests').offsetTop - 100,
+                behavior: 'smooth'
+            });
+        });
+        learnMoreBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: document.getElementById('about').offsetTop - 100,
+                behavior: 'smooth'
+            });
+        });
+
+        // Close modals
+        closeModals.forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
+            });
+        });
+
+        // Switch between login and signup modals
+        switchToSignup.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            signupModal.style.display = 'flex';
+        });
+
+        switchToLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            signupModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+        });
+
+        // Send OTP (mock)
+        sendOTP.addEventListener('click', function() {
+            const phone = document.getElementById('loginPhone').value;
+            if (phone) {
+                alert(`OTP sent to ${phone}. In a real application, this would be integrated with an SMS service.`);
+            } else {
+                alert('Please enter your phone number.');
+            }
+        });
+
+        // Login functionality
+        loginSubmit.addEventListener('click', function() {
+            const phone = document.getElementById('loginPhone').value;
+            const otp = document.getElementById('loginOTP').value;
+            
+            if (phone && otp) {
+                // Mock login - in real app, verify with backend
+                localStorage.setItem('sahayakLoggedIn', 'true');
+                localStorage.setItem('sahayakUser', phone);
+                loginModal.style.display = 'none';
+                showDashboard();
+                alert('Login successful!');
+            } else {
+                alert('Please enter both phone number and OTP.');
+            }
+        });
+
+        // Signup functionality
+        signupSubmit.addEventListener('click', function() {
+            const name = document.getElementById('signupName').value;
+            const phone = document.getElementById('signupPhone').value;
+            const aadhaar = document.getElementById('signupAadhaar').value;
+            const role = document.getElementById('signupRole').value;
+            
+            if (name && phone && aadhaar) {
+                if (aadhaar.length !== 12) {
+                    alert('Please enter a valid 12-digit Aadhaar number.');
+                    return;
+                }
+                
+                // Mock Aadhaar verification - in real app, integrate with Aadhaar API
+                localStorage.setItem('sahayakLoggedIn', 'true');
+                localStorage.setItem('sahayakUser', name);
+                localStorage.setItem('sahayakRole', role);
+                signupModal.style.display = 'none';
+                showDashboard();
+                alert('Account created successfully! Aadhaar verification completed.');
+            } else {
+                alert('Please fill all fields.');
+            }
+        });
+
+        // Show dashboard and hide main content
+        function showDashboard() {
+            document.querySelectorAll('section:not(#dashboard)').forEach(section => {
+                section.style.display = 'none';
+            });
+            dashboard.style.display = 'block';
+            
+            const userName = localStorage.getItem('sahayakUser') || 'User';
+            document.getElementById('userName').textContent = userName;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('sahayakLoggedIn');
+            localStorage.removeItem('sahayakUser');
+            localStorage.removeItem('sahayakRole');
+            
+            dashboard.style.display = 'none';
+            document.querySelectorAll('section:not(#dashboard)').forEach(section => {
+                section.style.display = 'block';
+            });
+            
+            window.scrollTo(0, 0);
+            alert('Logged out successfully.');
+        });
+
+        // Dashboard tab navigation
+        navBtns.forEach(btn => {
+            if (btn.id !== 'logoutBtn') {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    navBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Hide all tab contents
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    // Show the selected tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            }
+        });
+
+        // Create request button
+        createRequestBtn.addEventListener('click', function() {
+            requestModal.style.display = 'flex';
+        });
+
+        // Submit request
+        requestSubmit.addEventListener('click', function() {
+            const title = document.getElementById('requestTitle').value;
+            const category = document.getElementById('requestCategory').value;
+            const amount = document.getElementById('requestAmount').value;
+            const description = document.getElementById('requestDescription').value;
+            
+            if (title && category && amount && description) {
+                requestModal.style.display = 'none';
+                alert('Your request has been submitted for admin approval. You will be notified once it is approved.');
+                
+                // Reset form
+                document.getElementById('requestTitle').value = '';
+                document.getElementById('requestAmount').value = '';
+                document.getElementById('requestDescription').value = '';
+            } else {
+                alert('Please fill all required fields.');
+            }
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

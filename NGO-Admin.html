@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahayak - Advanced NGO Management Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --white: #FFFFFF;
+            --green: #138808;
+            --blue: #000080;
+            --light-blue: #1E40AF;
+            --dark-blue: #0F1E5A;
+            --gray: #F3F4F6;
+            --dark-gray: #4B5563;
+            --light-gray: #E5E7EB;
+            --sidebar-width: 280px;
+            --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--saffron) 0%, var(--white) 45%, var(--green) 100%);
+            color: var(--blue);
+            height: 100vh;
+            position: fixed;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            overflow-y: auto;
+            transition: var(--transition);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(0, 0, 128, 0.2);
+        }
+        
+        .logo i {
+            font-size: 2.2rem;
+            margin-right: 12px;
+            color: var(--blue);
+        }
+        
+        .logo h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--blue), var(--saffron));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .ngo-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.2rem;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+        
+        .ngo-info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ngo-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--light-blue));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-right: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 128, 0.2);
+        }
+        
+        .ngo-details h3 {
+            margin-bottom: 0.2rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        
+        .ngo-details p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ngo-details p i {
+            margin-right: 5px;
+            color: var(--green);
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1.2rem;
+            color: var(--blue);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(to right, rgba(0, 0, 128, 0.1), rgba(255, 153, 51, 0.1));
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .nav-links a:hover::before, .nav-links a.active::before {
+            width: 100%;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            font-weight: 600;
+            transform: translateX(5px);
+        }
+        
+        .nav-links i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            overflow-y: auto;
+            transition: var(--transition);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .header h2 {
+            color: var(--blue);
+            font-weight: 700;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .header h2 i {
+            margin-right: 10px;
+            color: var(--saffron);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .notification-icon {
+            position: relative;
+            background: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--dark-gray);
+        }
+        
+        .notification-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            color: var(--blue);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #EF4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .header-actions button {
+            background: linear-gradient(135deg, var(--blue), var(--light-blue));
+            color: white;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 128, 0.2);
+        }
+        
+        .header-actions button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 128, 0.3);
+        }
+        
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--saffron), var(--green));
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-right: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-1 .stat-icon { background: linear-gradient(135deg, var(--saffron), #FFB74D); color: white; }
+        .stat-2 .stat-icon { background: linear-gradient(135deg, var(--green), #4CAF50); color: white; }
+        .stat-3 .stat-icon { background: linear-gradient(135deg, var(--blue), var(--light-blue)); color: white; }
+        .stat-4 .stat-icon { background: linear-gradient(135deg, #EC4899, #F472B6); color: white; }
+        
+        .stat-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+        }
+        
+        .stat-info p {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        .stat-change {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .positive {
+            color: var(--green);
+        }
+        
+        .negative {
+            color: #EF4444;
+        }
+        
+        /* Dashboard Sections */
+        .dashboard-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+        
+        .dashboard-section:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        
+        .section-header h3 {
+            color: var(--blue);
+            font-weight: 600;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-header h3 i {
+            margin-right: 10px;
+            color: var(--saffron);
+        }
+        
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        
+        .data-table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--dark-blue);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .data-table tr {
+            transition: var(--transition);
+        }
+        
+        .data-table tr:hover {
+            background-color: #f8fafc;
+            transform: scale(1.01);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .status {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .status-pending {
+            background-color: #FEF3C7;
+            color: #D97706;
+        }
+        
+        .status-active {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+        
+        .status-completed {
+            background-color: #DBEAFE;
+            color: #1E40AF;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 0.9rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-right: 0.3rem;
+            transition: var(--transition);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .view-btn {
+            background: linear-gradient(135deg, var(--blue), var(--light-blue));
+            color: white;
+        }
+        
+        .edit-btn {
+            background: linear-gradient(135deg, var(--green), #4CAF50);
+            color: white;
+        }
+        
+        .delete-btn {
+            background: linear-gradient(135deg, #EF4444, #F87171);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 0.9rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.1);
+            outline: none;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1.2rem;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--saffron), var(--green));
+            color: white;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(255, 153, 51, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 153, 51, 0.4);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+            background: white;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+        
+        .tab {
+            padding: 0.9rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--blue);
+            font-weight: 600;
+            color: var(--blue);
+            background-color: rgba(0, 0, 128, 0.05);
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #f8fafc;
+            color: var(--blue);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            transition: var(--transition);
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-modal:hover {
+            background-color: #f1f1f1;
+            color: #EF4444;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 10px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--saffron), var(--green));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-header h3 {
+            color: var(--blue);
+            font-weight: 600;
+        }
+        
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+        
+        /* AI Insights Section */
+        .ai-insights {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .ai-insights-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .ai-insights-header i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        .ai-insights-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .insight-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .insight-item h4 {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .insight-item p {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        /* Interactive Cards */
+        .interactive-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border-left: 4px solid var(--saffron);
+        }
+        
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .interactive-card h4 {
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .interactive-card h4 i {
+            margin-right: 10px;
+            color: var(--saffron);
+        }
+        
+        /* Search and Filter */
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+        }
+        
+        .filter-dropdown {
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+            min-width: 150px;
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-2 {
+            margin-top: 2rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .items-center {
+            align-items: center;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 250px;
+            }
+            
+            .main-content {
+                margin-left: 250px;
+            }
+        }
+        
+        @media (max-width: 968px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem 0.8rem;
+            }
+            
+            .logo h1, .ngo-details, .nav-links span {
+                display: none;
+            }
+            
+            .logo {
+                justify-content: center;
+                padding-bottom: 1rem;
+            }
+            
+            .logo i {
+                margin-right: 0;
+                font-size: 2rem;
+            }
+            
+            .ngo-info {
+                justify-content: center;
+                padding: 0.8rem;
+            }
+            
+            .ngo-avatar {
+                margin-right: 0;
+            }
+            
+            .nav-links a {
+                justify-content: center;
+                padding: 0.9rem;
+            }
+            
+            .nav-links i {
+                margin-right: 0;
+                font-size: 1.4rem;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+                padding: 1.5rem;
+            }
+            
+            .stats-cards {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 1.2rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            
+            .ai-insights-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .dashboard-section {
+                padding: 1.2rem;
+            }
+            
+            .stat-card {
+                padding: 1.2rem;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stat-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-hands-helping"></i>
+            <h1>Sahayak NGO</h1>
+        </div>
+        
+        <div class="ngo-info">
+            <div class="ngo-avatar">
+                <i class="fas fa-hands"></i>
+            </div>
+            <div class="ngo-details">
+                <h3>HelpIndia Foundation</h3>
+                <p><i class="fas fa-circle"></i> Admin User</p>
+            </div>
+        </div>
+        
+        <ul class="nav-links">
+            <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+            <li><a href="#" data-tab="campaigns"><i class="fas fa-hand-holding-usd"></i> <span>Campaigns</span></a></li>
+            <li><a href="#" data-tab="beneficiaries"><i class="fas fa-users"></i> <span>Beneficiaries</span></a></li>
+            <li><a href="#" data-tab="contributions"><i class="fas fa-donate"></i> <span>Contributions</span></a></li>
+            <li><a href="#" data-tab="reports"><i class="fas fa-chart-bar"></i> <span>Reports</span></a></li>
+            <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2 id="page-title"><i class="fas fa-tachometer-alt"></i> NGO Dashboard</h2>
+            <div class="header-actions">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge">5</div>
+                </div>
+                <button id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card stat-1">
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>₹42,75,320</h3>
+                        <p>Total Funds Raised</p>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 18.5% increase
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-2">
+                    <div class="stat-icon">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>24</h3>
+                        <p>Active Campaigns</p>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 5 new this month
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-3">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>1,842</h3>
+                        <p>Beneficiaries Helped</p>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 12.7% increase
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-4">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>3,254</h3>
+                        <p>Total Donors</p>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 127 new this week
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI Insights Section -->
+            <div class="ai-insights">
+                <div class="ai-insights-header">
+                    <i class="fas fa-robot"></i>
+                    <h3>AI-Powered Insights</h3>
+                </div>
+                <div class="ai-insights-content">
+                    <div class="insight-item">
+                        <h4>Campaign Performance</h4>
+                        <p>Education campaigns are 35% more successful</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Donor Engagement</h4>
+                        <p>Repeat donors contribute 42% more on average</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Growth Opportunity</h4>
+                        <p>Medical campaigns have highest donor conversion</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Impact Prediction</h4>
+                        <p>Expected to help 500+ more beneficiaries this quarter</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Row -->
+            <div class="flex" style="gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="chart-container" style="flex: 2;">
+                    <div class="chart-header">
+                        <h3>Donation Trends</h3>
+                        <select id="trendPeriod" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #ddd;">
+                            <option>Last 7 days</option>
+                            <option>Last 30 days</option>
+                            <option>Last 90 days</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="donationTrendChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container" style="flex: 1;">
+                    <div class="chart-header">
+                        <h3>Campaign Distribution</h3>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="campaignDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Interactive Cards -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                </div>
+                <div class="flex" style="gap: 1rem; flex-wrap: wrap;">
+                    <div class="interactive-card" style="flex: 1; min-width: 200px;">
+                        <h4><i class="fas fa-plus-circle"></i> Create Campaign</h4>
+                        <p>Start a new fundraising campaign</p>
+                    </div>
+                    <div class="interactive-card" style="flex: 1; min-width: 200px;">
+                        <h4><i class="fas fa-user-plus"></i> Add Beneficiary</h4>
+                        <p>Register new beneficiaries</p>
+                    </div>
+                    <div class="interactive-card" style="flex: 1; min-width: 200px;">
+                        <h4><i class="fas fa-file-export"></i> Generate Report</h4>
+                        <p>Create financial or impact reports</p>
+                    </div>
+                    <div class="interactive-card" style="flex: 1; min-width: 200px;">
+                        <h4><i class="fas fa-envelope"></i> Send Updates</h4>
+                        <p>Notify donors about progress</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Active Campaigns -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-hand-holding-usd"></i> Active Campaigns</h3>
+                    <button class="view-btn action-btn" id="createCampaignBtn"><i class="fas fa-plus"></i> Create New Campaign</button>
+                </div>
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search campaigns..." id="campaignSearch">
+                    </div>
+                    <select class="filter-dropdown" id="campaignFilter">
+                        <option>All Categories</option>
+                        <option>Education</option>
+                        <option>Medical</option>
+                        <option>Disaster Relief</option>
+                        <option>Livelihood</option>
+                    </select>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Campaign ID</th>
+                            <th>Title</th>
+                            <th>Beneficiary</th>
+                            <th>Target Amount</th>
+                            <th>Raised</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#CAM2024112001</td>
+                            <td>Clean Water for Rural Villages</td>
+                            <td>Village Community, Rajasthan</td>
+                            <td>₹8,00,000</td>
+                            <td>₹5,10,000</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 64%"></div>
+                                </div>
+                                <small>64%</small>
+                            </td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#CAM2024111501</td>
+                            <td>Support for Child Education</td>
+                            <td>45 Students, Karnataka</td>
+                            <td>₹3,75,000</td>
+                            <td>₹2,80,250</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 75%"></div>
+                                </div>
+                                <small>75%</small>
+                            </td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#CAM2024110501</td>
+                            <td>Flood Relief in Assam</td>
+                            <td>200+ Families, Assam</td>
+                            <td>₹5,00,000</td>
+                            <td>₹3,45,000</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 69%"></div>
+                                </div>
+                                <small>69%</small>
+                            </td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#CAM2024101001</td>
+                            <td>Community Healthcare Camp</td>
+                            <td>Local Community, Bihar</td>
+                            <td>₹2,50,000</td>
+                            <td>₹1,15,000</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 46%"></div>
+                                </div>
+                                <small>46%</small>
+                            </td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Recent Contributions -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-donate"></i> Recent Contributions</h3>
+                    <button class="view-btn action-btn"><i class="fas fa-list"></i> View All</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Donor</th>
+                            <th>Campaign</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>21 Nov 2023, 11:20</td>
+                            <td>Anika Joshi</td>
+                            <td>Clean Water for Rural Villages</td>
+                            <td>₹7,500</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>21 Nov 2023, 10:45</td>
+                            <td>Rohit Malhotra</td>
+                            <td>Support for Child Education</td>
+                            <td>₹2,500</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>20 Nov 2023, 16:30</td>
+                            <td>Sneha Desai</td>
+                            <td>Flood Relief in Assam</td>
+                            <td>₹10,000</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>19 Nov 2023, 14:15</td>
+                            <td>Karan Mehta</td>
+                            <td>Community Healthcare Camp</td>
+                            <td>₹5,000</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Campaigns Tab -->
+        <div id="campaigns" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-hand-holding-usd"></i> Manage Campaigns</h3>
+                    <button class="view-btn action-btn" id="createCampaignBtn2"><i class="fas fa-plus"></i> Create New Campaign</button>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" data-campaign-tab="all">All Campaigns</div>
+                    <div class="tab" data-campaign-tab="active">Active</div>
+                    <div class="tab" data-campaign-tab="completed">Completed</div>
+                    <div class="tab" data-campaign-tab="draft">Draft</div>
+                </div>
+                
+                <div class="tab-content active" id="all-campaigns">
+                    <div class="search-filter">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search campaigns..." id="allCampaignSearch">
+                        </div>
+                        <select class="filter-dropdown" id="allCampaignFilter">
+                            <option>All Categories</option>
+                            <option>Education</option>
+                            <option>Medical</option>
+                            <option>Disaster Relief</option>
+                            <option>Livelihood</option>
+                            <option>Essential Supplies</option>
+                        </select>
+                        <select class="filter-dropdown" id="statusFilter">
+                            <option>All Status</option>
+                            <option>Active</option>
+                            <option>Completed</option>
+                            <option>Draft</option>
+                        </select>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Campaign ID</th>
+                                <th>Title</th>
+                                <th>Beneficiary</th>
+                                <th>Category</th>
+                                <th>Target Amount</th>
+                                <th>Raised</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#CAM2024112001</td>
+                                <td>Clean Water for Rural Villages</td>
+                                <td>Village Community, Rajasthan</td>
+                                <td>Essential Supplies</td>
+                                <td>₹8,00,000</td>
+                                <td>₹5,10,000</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 64%"></div>
+                                    </div>
+                                    <small>64%</small>
+                                </td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>
+                                    <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="delete-btn action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#CAM2024111501</td>
+                                <td>Support for Child Education</td>
+                                <td>45 Students, Karnataka</td>
+                                <td>Education</td>
+                                <td>₹3,75,000</td>
+                                <td>₹2,80,250</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 75%"></div>
+                                    </div>
+                                    <small>75%</small>
+                                </td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>
+                                    <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="delete-btn action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#CAM2024110501</td>
+                                <td>Flood Relief in Assam</td>
+                                <td>200+ Families, Assam</td>
+                                <td>Disaster Relief</td>
+                                <td>₹5,00,000</td>
+                                <td>₹3,45,000</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 69%"></div>
+                                    </div>
+                                    <small>69%</small>
+                                </td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>
+                                    <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="delete-btn action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#CAM2024102001</td>
+                                <td>Annual School Supplies Drive</td>
+                                <td>1,200 Children, Pan-India</td>
+                                <td>Education</td>
+                                <td>₹4,50,000</td>
+                                <td>₹4,50,000</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 100%"></div>
+                                    </div>
+                                    <small>100%</small>
+                                </td>
+                                <td><span class="status status-completed">Completed</span></td>
+                                <td>
+                                    <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="edit-btn action-btn"><i class="fas fa-chart-bar"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#CAM2024101001</td>
+                                <td>Community Healthcare Camp</td>
+                                <td>Local Community, Bihar</td>
+                                <td>Medical</td>
+                                <td>₹2,50,000</td>
+                                <td>₹1,15,000</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 46%"></div>
+                                    </div>
+                                    <small>46%</small>
+                                </td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>
+                                    <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="delete-btn action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#CAM2024091501</td>
+                                <td>Women's Skill Development</td>
+                                <td>150 Women, Uttar Pradesh</td>
+                                <td>Livelihood</td>
+                                <td>₹6,00,000</td>
+                                <td>₹4,20,000</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 70%"></div>
+                                    </div>
+                                    <small>70%</small>
+                                </td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>
+                                    <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="delete-btn action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Beneficiaries Tab -->
+        <div id="beneficiaries" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-users"></i> Beneficiary Management</h3>
+                    <button class="view-btn action-btn" id="addBeneficiaryBtn"><i class="fas fa-plus"></i> Add Beneficiary</button>
+                </div>
+                
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search beneficiaries..." id="beneficiarySearch">
+                    </div>
+                    <select class="filter-dropdown" id="beneficiaryFilter">
+                        <option>All Locations</option>
+                        <option>Rajasthan</option>
+                        <option>Karnataka</option>
+                        <option>Tamil Nadu</option>
+                        <option>Gujarat</option>
+                        <option>Maharashtra</option>
+                        <option>Delhi</option>
+                    </select>
+                    <select class="filter-dropdown" id="beneficiaryStatusFilter">
+                        <option>All Status</option>
+                        <option>Active</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Beneficiary ID</th>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Location</th>
+                            <th>Aadhaar Verified</th>
+                            <th>Campaign</th>
+                            <th>Amount Needed</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#BEN2024112001</td>
+                            <td>Sunita Devi</td>
+                            <td>+91 98765 43210</td>
+                            <td>Rajasthan</td>
+                            <td><i class="fas fa-check-circle" style="color: var(--green);"></i></td>
+                            <td>Clean Water Initiative</td>
+                            <td>₹2,00,000</td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#BEN2024111801</td>
+                            <td>Arjun Patel</td>
+                            <td>+91 98765 43211</td>
+                            <td>Karnataka</td>
+                            <td><i class="fas fa-check-circle" style="color: var(--green);"></i></td>
+                            <td>Education Support</td>
+                            <td>₹75,000</td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#BEN2024111501</td>
+                            <td>Meera Sharma</td>
+                            <td>+91 98765 43212</td>
+                            <td>Tamil Nadu</td>
+                            <td><i class="fas fa-check-circle" style="color: var(--green);"></i></td>
+                            <td>Medical Treatment</td>
+                            <td>₹3,00,000</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#BEN2024111001</td>
+                            <td>Ramesh Kumar</td>
+                            <td>+91 98765 43213</td>
+                            <td>Gujarat</td>
+                            <td><i class="fas fa-check-circle" style="color: var(--green);"></i></td>
+                            <td>Livelihood Support</td>
+                            <td>₹50,000</td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#BEN2024102501</td>
+                            <td>Priya Singh</td>
+                            <td>+91 98765 43214</td>
+                            <td>Maharashtra</td>
+                            <td><i class="fas fa-check-circle" style="color: var(--green);"></i></td>
+                            <td>Women Empowerment</td>
+                            <td>₹1,20,000</td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#BEN2024101501</td>
+                            <td>Vikram Joshi</td>
+                            <td>+91 98765 43215</td>
+                            <td>Delhi</td>
+                            <td><i class="fas fa-check-circle" style="color: var(--green);"></i></td>
+                            <td>Disaster Relief</td>
+                            <td>₹1,50,000</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Contributions Tab -->
+        <div id="contributions" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-donate"></i> Contribution Management</h3>
+                    <div class="flex items-center" style="gap: 10px;">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search contributions..." id="contributionSearch">
+                        </div>
+                        <button class="view-btn action-btn"><i class="fas fa-filter"></i> Filter</button>
+                    </div>
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Date</th>
+                            <th>Donor</th>
+                            <th>Campaign</th>
+                            <th>Amount</th>
+                            <th>Payment Method</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#TXN2024112101</td>
+                            <td>21 Nov 2023, 11:20</td>
+                            <td>Anika Joshi</td>
+                            <td>Clean Water for Rural Villages</td>
+                            <td>₹7,500</td>
+                            <td>UPI</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#TXN2024112102</td>
+                            <td>21 Nov 2023, 10:45</td>
+                            <td>Rohit Malhotra</td>
+                            <td>Support for Child Education</td>
+                            <td>₹2,500</td>
+                            <td>Credit Card</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#TXN2024112001</td>
+                            <td>20 Nov 2023, 16:30</td>
+                            <td>Sneha Desai</td>
+                            <td>Flood Relief in Assam</td>
+                            <td>₹10,000</td>
+                            <td>UPI</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#TXN2024111901</td>
+                            <td>19 Nov 2023, 14:15</td>
+                            <td>Karan Mehta</td>
+                            <td>Community Healthcare Camp</td>
+                            <td>₹5,000</td>
+                            <td>Net Banking</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#TXN2024111801</td>
+                            <td>18 Nov 2023, 12:30</td>
+                            <td>Neha Reddy</td>
+                            <td>Women's Skill Development</td>
+                            <td>₹15,000</td>
+                            <td>Debit Card</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#TXN2024111701</td>
+                            <td>17 Nov 2023, 09:45</td>
+                            <td>Rajiv Khanna</td>
+                            <td>Annual School Supplies Drive</td>
+                            <td>₹3,000</td>
+                            <td>UPI</td>
+                            <td><span class="status status-completed">Completed</span></td>
+                            <td>
+                                <button class="view-btn action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="edit-btn action-btn"><i class="fas fa-receipt"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-chart-bar"></i> Generate Reports</h3>
+                    <div class="flex items-center" style="gap: 10px;">
+                        <select style="padding: 0.7rem; border: 1px solid #ddd; border-radius: 8px;">
+                            <option>Last 7 days</option>
+                            <option>Last 30 days</option>
+                            <option>Last 90 days</option>
+                            <option>Last year</option>
+                        </select>
+                        <button class="view-btn action-btn"><i class="fas fa-chart-bar"></i> Generate</button>
+                    </div>
+                </div>
+                
+                <div class="stats-cards">
+                    <div class="stat-card stat-1">
+                        <div class="stat-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>₹1,45,670</h3>
+                            <p>Donations (Last 30 days)</p>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 8.2% increase
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-2">
+                        <div class="stat-icon">
+                            <i class="fas fa-list-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>42</h3>
+                            <p>New Donors (Last 30 days)</p>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 15.3% increase
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-3">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>18</h3>
+                            <p>New Beneficiaries (Last 30 days)</p>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 5.6% increase
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-4">
+                        <div class="stat-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>85%</h3>
+                            <p>Campaign Success Rate</p>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 3.2% increase
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container mt-2">
+                    <div class="chart-header">
+                        <h3>Monthly Donation Trends</h3>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="monthlyTrendChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-2" style="gap: 1rem;">
+                    <button class="submit-btn"><i class="fas fa-download"></i> Download Financial Report</button>
+                    <button class="submit-btn"><i class="fas fa-download"></i> Download Donor Report</button>
+                    <button class="submit-btn"><i class="fas fa-download"></i> Download Beneficiary Report</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-cog"></i> NGO Settings</h3>
+                </div>
+                
+                <form id="settings-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ngo-name">NGO Name</label>
+                            <input type="text" id="ngo-name" value="HelpIndia Foundation">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ngo-registration">Registration Number</label>
+                            <input type="text" id="ngo-registration" value="NGO/2020/123456">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ngo-email">Contact Email</label>
+                            <input type="email" id="ngo-email" value="contact@helpindia.org">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ngo-phone">Contact Phone</label>
+                            <input type="tel" id="ngo-phone" value="+91 1800 123 456">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ngo-address">Address</label>
+                        <textarea id="ngo-address">123 Social Service Road, New Delhi, India - 110001</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ngo-description">NGO Description</label>
+                        <textarea id="ngo-description">HelpIndia Foundation is a non-profit organization dedicated to providing emergency relief and long-term support to communities in need across India.</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ngo-website">Website</label>
+                        <input type="url" id="ngo-website" value="https://www.helpindia.org">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ngo-logo">NGO Logo</label>
+                        <input type="file" id="ngo-logo" accept="image/*">
+                    </div>
+                    
+                    <button type="submit" class="submit-btn"><i class="fas fa-save"></i> Save Settings</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Campaign Modal -->
+    <div class="modal" id="campaignModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: var(--blue); display: flex; align-items: center;">
+                <i class="fas fa-hand-holding-usd" style="margin-right: 10px;"></i> Create New Campaign
+            </h2>
+            <form id="campaign-form">
+                <div class="form-group">
+                    <label for="campaign-title">Campaign Title</label>
+                    <input type="text" id="campaign-title" placeholder="Enter campaign title" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="campaign-category">Category</label>
+                        <select id="campaign-category" required>
+                            <option value="">Select category</option>
+                            <option value="medical">Medical</option>
+                            <option value="education">Education</option>
+                            <option value="disaster">Disaster Relief</option>
+                            <option value="livelihood">Livelihood</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="campaign-target">Target Amount (₹)</label>
+                        <input type="number" id="campaign-target" placeholder="Enter target amount" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="campaign-deadline">Campaign Deadline</label>
+                        <input type="date" id="campaign-deadline" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="campaign-beneficiary">Select Beneficiary</label>
+                        <select id="campaign-beneficiary" required>
+                            <option value="">Select beneficiary</option>
+                            <option value="ben1">Rajesh Kumar</option>
+                            <option value="ben2">Sunita Devi</option>
+                            <option value="ben3">Ramesh Patel</option>
+                            <option value="multiple">Multiple Beneficiaries</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="campaign-description">Campaign Description</label>
+                    <textarea id="campaign-description" placeholder="Describe the campaign and its purpose" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="campaign-image">Campaign Image</label>
+                    <input type="file" id="campaign-image" accept="image/*">
+                </div>
+                
+                <div class="flex justify-between mt-2">
+                    <button type="button" class="action-btn delete-btn" id="cancelCampaignBtn">Cancel</button>
+                    <button type="submit" class="submit-btn"><i class="fas fa-plus"></i> Create Campaign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('.nav-links a').forEach(a => {
+                    a.classList.remove('active');
+                });
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Show the selected tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+                
+                // Update page title
+                const tabName = this.querySelector('span').textContent;
+                document.getElementById('page-title').innerHTML = `<i class="fas fa-${getTabIcon(tabId)}"></i> ${tabName}`;
+            });
+        });
+        
+        // Helper function to get tab icons
+        function getTabIcon(tabId) {
+            const icons = {
+                'dashboard': 'tachometer-alt',
+                'campaigns': 'hand-holding-usd',
+                'beneficiaries': 'users',
+                'contributions': 'donate',
+                'reports': 'chart-bar',
+                'settings': 'cog'
+            };
+            return icons[tabId] || 'circle';
+        }
+        
+        // Campaign Tabs
+        document.querySelectorAll('[data-campaign-tab]').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('[data-campaign-tab]').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // In a real application, we would filter the campaigns here
+                showNotification(`Showing ${this.textContent} campaigns`);
+            });
+        });
+        
+        // Action Buttons
+        document.querySelectorAll('.view-btn, .edit-btn, .delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.classList.contains('view-btn') ? 'view' : 
+                             this.classList.contains('edit-btn') ? 'edit' : 'delete';
+                
+                if (action === 'view') {
+                    // Show details modal
+                    showNotification('View functionality would be implemented here.');
+                } else if (action === 'edit') {
+                    // Show edit modal
+                    showNotification('Edit functionality would be implemented here.');
+                } else {
+                    // Delete confirmation
+                    if (confirm('Are you sure you want to delete this item?')) {
+                        // In a real application, this would make an API call
+                        const row = this.closest('tr');
+                        row.style.opacity = '0.5';
+                        setTimeout(() => {
+                            row.remove();
+                            showNotification('Item deleted successfully');
+                        }, 500);
+                    }
+                }
+            });
+        });
+        
+        // Interactive Cards
+        document.querySelectorAll('.interactive-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const title = this.querySelector('h4').textContent;
+                showNotification(`${title} functionality would be implemented here.`);
+            });
+        });
+        
+        // Create Campaign Buttons
+        document.getElementById('createCampaignBtn').addEventListener('click', showCampaignModal);
+        document.getElementById('createCampaignBtn2').addEventListener('click', showCampaignModal);
+        
+        function showCampaignModal() {
+            document.getElementById('campaignModal').style.display = 'flex';
+        }
+        
+        // Add Beneficiary Button
+        document.getElementById('addBeneficiaryBtn').addEventListener('click', function() {
+            showNotification('Add beneficiary functionality would be implemented here.');
+        });
+        
+        // Close Modal
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
+            });
+        });
+        
+        // Cancel Campaign Button
+        document.getElementById('cancelCampaignBtn').addEventListener('click', function() {
+            document.getElementById('campaignModal').style.display = 'none';
+        });
+        
+        // Logout Button
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                // In a real application, this would clear the session and redirect
+                showNotification('Logged out successfully. Redirecting to login page.');
+                // window.location.href = 'login.html';
+            }
+        });
+        
+        // Refresh Button
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            // In a real application, this would refresh the data
+            showNotification('Data refreshed successfully.');
+            
+            // Add a subtle animation to stats cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    card.style.transform = 'translateY(0)';
+                }, 300);
+            });
+        });
+        
+        // Notification Icon
+        document.querySelector('.notification-icon').addEventListener('click', function() {
+            showNotification('You have 5 new notifications');
+        });
+        
+        // Form Submissions
+        document.getElementById('campaign-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Campaign created successfully and submitted for approval.');
+            document.getElementById('campaignModal').style.display = 'none';
+            this.reset();
+        });
+        
+        document.getElementById('settings-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('NGO settings saved successfully.');
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+        
+        // Search functionality
+        document.getElementById('campaignSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            filterTableRows('campaigns', searchTerm);
+        });
+        
+        document.getElementById('allCampaignSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            filterTableRows('all-campaigns', searchTerm);
+        });
+        
+        document.getElementById('beneficiarySearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            filterTableRows('beneficiaries', searchTerm);
+        });
+        
+        document.getElementById('contributionSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            filterTableRows('contributions', searchTerm);
+        });
+        
+        function filterTableRows(tableId, searchTerm) {
+            const table = document.getElementById(tableId).querySelector('tbody');
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.textContent.toLowerCase();
+                
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+        
+        // Notification function
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="position: fixed; top: 20px; right: 20px; background: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 1000; display: flex; align-items: center; gap: 10px; border-left: 4px solid var(--green); animation: slideInRight 0.3s ease;">
+                    <i class="fas fa-check-circle" style="color: var(--green);"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Initialize Charts
+        function initializeCharts() {
+            // Donation Trend Chart
+            const donationTrendCtx = document.getElementById('donationTrendChart').getContext('2d');
+            const donationTrendChart = new Chart(donationTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                    datasets: [{
+                        label: 'Donations (₹)',
+                        data: [65000, 78000, 82000, 75000, 92000, 105000, 98000, 112000, 125000, 118000, 145000],
+                        borderColor: '#000080',
+                        backgroundColor: 'rgba(0, 0, 128, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Campaign Distribution Chart
+            const campaignDistributionCtx = document.getElementById('campaignDistributionChart').getContext('2d');
+            const campaignDistributionChart = new Chart(campaignDistributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Education', 'Medical', 'Disaster Relief', 'Livelihood', 'Other'],
+                    datasets: [{
+                        data: [35, 25, 20, 15, 5],
+                        backgroundColor: [
+                            '#FF9933',
+                            '#138808',
+                            '#000080',
+                            '#1E40AF',
+                            '#EC4899'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+            
+            // Monthly Trend Chart
+            const monthlyTrendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+            const monthlyTrendChart = new Chart(monthlyTrendCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                    datasets: [{
+                        label: 'Donations (₹)',
+                        data: [65000, 78000, 82000, 75000, 92000, 105000, 98000, 112000, 125000, 118000, 145000],
+                        backgroundColor: [
+                            'rgba(255, 153, 51, 0.7)',
+                            'rgba(19, 136, 8, 0.7)',
+                            'rgba(0, 0, 128, 0.7)',
+                            'rgba(30, 64, 175, 0.7)',
+                            'rgba(255, 153, 51, 0.7)',
+                            'rgba(19, 136, 8, 0.7)',
+                            'rgba(0, 0, 128, 0.7)',
+                            'rgba(30, 64, 175, 0.7)',
+                            'rgba(255, 153, 51, 0.7)',
+                            'rgba(19, 136, 8, 0.7)',
+                            'rgba(0, 0, 128, 0.7)'
+                        ],
+                        borderColor: [
+                            '#FF9933',
+                            '#138808',
+                            '#000080',
+                            '#1E40AF',
+                            '#FF9933',
+                            '#138808',
+                            '#000080',
+                            '#1E40AF',
+                            '#FF9933',
+                            '#138808',
+                            '#000080'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Update chart when period changes
+            document.getElementById('trendPeriod').addEventListener('change', function() {
+                showNotification(`Chart updated for ${this.value}`);
+            });
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats cards on page load
+            const statsCards = document.querySelectorAll('.stat-card');
+            statsCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+            
+            // Set default date for campaign deadline (7 days from now)
+            const today = new Date();
+            const nextWeek = new Date(today);
+            nextWeek.setDate(today.getDate() + 7);
+            const formattedDate = nextWeek.toISOString().split('T')[0];
+            document.getElementById('campaign-deadline').value = formattedDate;
+            
+            // Initialize charts
+            initializeCharts();
+        });
+    </script>
+</body>
+</html>
